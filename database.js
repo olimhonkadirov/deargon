@@ -1,8 +1,11 @@
-const { DatabaseSync } = require('node:sqlite');
+//const { DatabaseSync } = require('node:sqlite');
+const Database = require('better-sqlite3');
+const db = new Database('deargon.db');
+
 const bcrypt = require('bcryptjs');
 const path   = require('path');
 
-const db = new DatabaseSync(path.join(__dirname, 'deargon.db'));
+//const db = new DatabaseSync(path.join(__dirname, 'deargon.db'));
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS settings (
