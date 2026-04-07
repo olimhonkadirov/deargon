@@ -95,9 +95,9 @@ app.get('/api/admin/settings', requireAuth, (_req, res) => {
 });
 
 app.put('/api/admin/settings', requireAuth, (req, res) => {
-  const stmt = db.prepare('UPDATE settings SET value = ? WHERE key = ?');
+  const stmt = db.prepare('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)');
   for (const [key, value] of Object.entries(req.body)) {
-    if (EDITABLE.includes(key)) stmt.run(String(value), key);
+    if (EDITABLE.includes(key)) stmt.run(key, String(value));
   }
   res.json({ success: true });
 });

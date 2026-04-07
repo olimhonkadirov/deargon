@@ -14,7 +14,10 @@
       "Bash(curl -s http://localhost:9944/api/settings)",
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\('countdown_end:', repr\\(d.get\\('countdown_end'\\)\\)\\); print\\('uzum_url:', repr\\(d.get\\('uzum_url'\\)\\)\\)\")",
       "Bash(curl -v -c /tmp/jar.txt -b /tmp/jar.txt -X POST http://localhost:9944/api/admin/login -H 'Content-Type: application/json' -d '{\"password\":\"deargon2024\"}')",
-      "Bash(node --experimental-sqlite --no-warnings -e ':*)"
+      "Bash(node --experimental-sqlite --no-warnings -e ':*)",
+      "Bash(curl -s -c /tmp/jar.txt -b /tmp/jar.txt -X POST http://localhost:9944/api/admin/login -H 'Content-Type: application/json' -d '{\"password\":\"deargon2024\"}')",
+      "Bash(curl -s -c /tmp/jar.txt -b /tmp/jar.txt -X PUT http://localhost:9944/api/admin/settings -H 'Content-Type: application/json' -d '{\"price\":\"79 000\",\"price_currency\":\"so'\\\\''m\",\"price_old\":\"120 000\",\"price_discount\":\"35\",\"countdown_end\":\"2026-04-15T20:00:00.000Z\"}')",
+      "Bash(python3 -c ':*)"
     ]
   }
 }
