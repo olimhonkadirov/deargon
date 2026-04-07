@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deargon — Admin Panel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { theme: { extend: { colors: { primary: { DEFAULT: '#F97316', dark: '#EA580C' } } } } };</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .badge-btn { background: linear-gradient(135deg, #F97316, #EA580C); }
+    input:focus, textarea:focus, select:focus { outline: none; box-shadow: 0 0 0 3px rgba(249,115,22,.2); }
+    .tab-btn.active { border-bottom-color: #F97316; color: #F97316; }
+    #toast { transition: opacity .4s ease, transform .4s ease; }
+    .drop-zone { border: 2px dashed #d1d5db; transition: border-color .2s, background .2s; }
+    .drop-zone.drag-over { border-color: #F97316; background: #fff7ed; }
+    .img-thumb:hover .img-overlay { opacity: 1; }
+    .img-overlay { transition: opacity .2s; }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+<!-- ════════ LOGIN ════════ -->
+<div id="login-screen" class="min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-sm">
+    <div class="text-center mb-7">
+      <div class="text-3xl font-black mb-1">DEAR<span class="text-primary">GON</span></div>
+      <p class="text-gray-500 text-sm">Admin panel kirish</p>
+    </div>
+    <form id="login-form" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Parol</label>
+        <div class="relative">
+          <input id="login-password" type="password" placeholder="Parolni kiriting"
+            class="w-full border border-gray-200 rounded-xl px-4 py-3 pr-10 text-sm focus:border-primary transition" required />
+          <button type="button" onclick="togglePwd('login-password')"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+            <i class="fa-solid fa-eye text-sm"></i>
+          </button>
+        </div>
+      </div>
+      <div id="login-error" class="hidden text-red-500 text-sm text-center bg-red-50 rounded-xl p-2"></div>
+      <button type="submit" class="badge-btn w-full text-white font-bold py-3 rounded-xl hover:opacity-90 transition">
+        Kirish <i class="fa-solid fa-arrow-right ml-1"></i>
+      </button>
+    </form>
+    <p class="text-xs text-gray-400 text-center mt-5">Default parol: <code class="bg-gray-100 px-1 rounded">deargon2024</code></p>
+  </div>
+</div>
+
+<!-- ════════ DASHBOARD ════════ -->
+<div id="dashboard-screen" class="hidden min-h-screen flex flex-col">
+
+  <!-- Top bar -->
+  <header class="bg-white border-b border-gray-200 sticky top-0 z-30">
+    <div class="max-w-5xl mx-auto px-4 flex items-center justify-between h-14">
+      <div class="flex items-center gap-3">
+        <span class="text-lg font-black">DEAR<span class="text-primary">GON</span></span>
+        <span class="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full hidden sm:block">Admin Panel</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="/" target="_blank" class="text-sm text-gray-500 hover:text-primary transition flex items-center gap-1">
+          <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+          <span class="hidden sm:inline">Saytni ko'rish</span>
+        </a>
+        <button onclick="logout()" class="text-sm text-red-500 hover:bg-red-50 px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span class="hidden sm:inline">Chiqish</span>
+        </button>
+      </div>
+    </div>
+    <!-- Tabs -->
+    <div class="max-w-5xl mx-auto px-4 flex border-b border-gray-100 -mb-px overflow-x-auto">
+      <button onclick="showTab('contact')"   id="tab-contact"  class="tab-btn active px-4 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent transition whitespace-nowrap"><i class="fa-solid fa-address-book mr-1.5"></i>Aloqa</button>
+      <button onclick="showTab('price')"     id="tab-price"    class="tab-btn px-4 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent transition whitespace-nowrap"><i class="fa-solid fa-tag mr-1.5"></i>Narx</button>
+      <button onclick="showTab('texts')"     id="tab-texts"    class="tab-btn px-4 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent transition whitespace-nowrap"><i class="fa-solid fa-pen-nib mr-1.5"></i>Matnlar</button>
+      <button onclick="showTab('media')"     id="tab-media"    class="tab-btn px-4 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent transition whitespace-nowrap"><i class="fa-solid fa-photo-film mr-1.5"></i>Media</button>
+      <button onclick="showTab('images')"    id="tab-images"   class="tab-btn px-4 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent transition whitespace-nowrap"><i class="fa-solid fa-images mr-1.5"></i>Rasmlar</button>
+      <button onclick="showTab('password')"  id="tab-password" class="tab-btn px-4 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent transition whitespace-nowrap"><i class="fa-solid fa-lock mr-1.5"></i>Parol</button>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-5xl mx-auto px-4 py-6 w-full">
+
+    <!-- ── CONTACT tab ── -->
+    <div id="panel-contact">
+      <form onsubmit="saveSection(event, contactFields)" class="space-y-5">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+            <i class="fa-solid fa-address-book text-primary"></i>
+            <h2 class="font-semibold text-gray-800">Aloqa ma'lumotlari</h2>
+          </div>
+          <div class="p-6 space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Telefon raqam</label>
+              <input id="f-phone" type="tel" name="phone" placeholder="+998 XX XXX XX XX"
+                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">WhatsApp raqam</label>
+              <input id="f-whatsapp" type="tel" name="whatsapp" placeholder="998XXXXXXXXX"
+                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
+              <p class="text-xs text-gray-400 mt-1">+ belgisisiz: 998948379944</p>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Telegram (asosiy — floating tugma)</label>
+              <input id="f-telegram-main" type="url" name="telegram_main" placeholder="https://t.me/username"
+                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
+              <p class="text-xs text-gray-400 mt-1">Saytdagi barcha Telegram tugmalari shu linkga yo'naladi</p>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Telegram (qo'shimcha)</label>
+                <input id="f-telegram" type="url" name="telegram" placeholder="https://t.me/username"
+                  class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Instagram</label>
+                <input id="f-instagram" type="url" name="instagram" placeholder="https://instagram.com/username"
+                  class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-end">
+          <button type="submit" class="badge-btn text-white font-bold px-7 py-2.5 rounded-xl hover:opacity-90 transition flex items-center gap-2">
+            <i class="fa-solid fa-floppy-disk"></i> Saqlash
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ── PRICE tab ── -->
+    <div id="panel-price" class="hidden">
+      <form onsubmit="saveSection(event, priceFields)" class="space-y-5">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden max-w-lg">
+          <div class="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+            <i class="fa-solid fa-tag text-primary"></i>
+            <h2 class="font-semibold text-gray-800">Mahsulot narxi</h2>
+          </div>
+          <div class="p-6 space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Narx</label>
+              <input id="f-price" name="price" type="text" placeholder="59 000"
+                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
+              <p class="text-xs text-gray-400 mt-1">Faqat raqam va bo'shliq: masalan <code>59 000</code></p>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Valyuta / birlik</label>
+              <input id="f-price-currency" name="price_currency" type="text" placeholder="so'm"
+                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
+            </div>
+            <!-- Preview -->
+            <div class="bg-orange-50 rounded-xl p-4">
+              <p class="text-xs font-medium text-gray-600 mb-2">Ko'rinishi:</p>
+              <div class="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl px-4 py-2 shadow">
+                <i class="fa-solid fa-tag text-white/70 text-sm"></i>
+                <span class="text-xs text-white/70">Narxi:</span>
+                <span id="price-preview" class="text-lg font-black">59 000</span>
+                <span id="currency-preview" class="font-semibold">so'm</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-end max-w-lg">
+          <button type="submit" class="badge-btn text-white font-bold px-7 py-2.5 rounded-xl hover:opacity-90 transition flex items-center gap-2">
+            <i class="fa-solid fa-floppy-disk"></i> Saqlash
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ── TEXTS tab ── -->
+    <div id="panel-texts" class="hidden">
+      <form onsubmit="saveSection(event, textsFields)" class="space-y-5">
+
+        <!-- Hero section -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+            <i class="fa-solid fa-house text-primary"></i>
+            <h2 class="font-semibold text-gray-800">Hero (bosh qism) matni</h2>
+          </div>
+          <div class="p-6 space-y-4">
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Sarlavha</label>
+                <input id="f-hero-title" name="hero_title" type="text" placeholder="Shina teshildimi?"
+                  class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Ajratilgan so'z <span class="text-primary">(sariq)</span></label>
+                <input id="f-hero-highlight" name="hero_highlight" type="text" placeholder="Xavotir yo'q!"
+                  class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Qisqacha tavsif</label>
+              <textarea id="f-hero-subtitle" name="hero_subtitle" rows="3" placeholder="Deargon aerosoli..."
+                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition resize-none"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact section -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+            <i class="fa-solid fa-phone text-primary"></i>
+            <h2 class="font-semibold text-gray-800">Aloqa bo'limi matni</h2>
+          </div>
+          <div class="p-6 space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Sarlavha</label>
+              <input id="f-contact-title" name="contact_title" type="text"
+                placeholder="Buyurtma yoki savol bormi?"
+                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Kichik tavsif</label>
+              <input id="f-contact-subtitle" name="contact_subtitle" type="text"
+                placeholder="Telegram orqali yozing..."
+                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Yetkazib berish matni</label>
+              <input id="f-delivery-text" name="delivery_text" type="text"
+                placeholder="O'zbekiston bo'yicha yetkazib berish"
+                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Site / Footer -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+            <i class="fa-solid fa-globe text-primary"></i>
+            <h2 class="font-semibold text-gray-800">Sayt / Footer</h2>
+          </div>
+          <div class="p-6 space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Brauzer tab sarlavhasi</label>
+              <input id="f-site-title" name="site_title" type="text"
+                placeholder="Deargon — Shina Tez Yamlash"
+                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Footer copyright matni</label>
+              <input id="f-footer-copy" name="footer_copy" type="text"
+                placeholder="© 2024 Deargon. Barcha huquqlar himoyalangan."
+                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-end">
+          <button type="submit" class="badge-btn text-white font-bold px-7 py-2.5 rounded-xl hover:opacity-90 transition flex items-center gap-2">
+            <i class="fa-solid fa-floppy-disk"></i> Saqlash
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ── MEDIA tab ── -->
+    <div id="panel-media" class="hidden">
+      <form onsubmit="saveSection(event, mediaFields)" class="space-y-5">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+            <i class="fa-solid fa-photo-film text-primary"></i>
+            <h2 class="font-semibold text-gray-800">Media URL lar</h2>
+          </div>
+          <div class="p-6 space-y-5">
+            <!-- YouTube -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">YouTube video URL</label>
+              <input id="f-youtube" type="url" name="youtube_url"
+                placeholder="https://www.youtube.com/watch?v=..."
+                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
+              <div id="yt-preview" class="hidden mt-3">
+                <div class="rounded-xl overflow-hidden aspect-video max-w-sm bg-gray-100">
+                  <iframe id="yt-iframe" src="" frameborder="0" allowfullscreen class="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product image URL -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">
+                Mahsulot rasmi URL
+                <span class="text-xs text-gray-400 font-normal ml-1">(yoki quyida fayl yuklang)</span>
+              </label>
+              <input id="f-product-img" type="url" name="product_image_url"
+                placeholder="https://example.com/product.jpg"
+                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
+              <div id="product-img-preview" class="mt-2 hidden">
+                <img id="product-img-tag" src="" alt="preview" class="w-24 h-24 object-cover rounded-xl border border-gray-200" />
+              </div>
+            </div>
+
+            <!-- Hero image URL -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Hero fon rasmi URL</label>
+              <input id="f-hero-img" type="url" name="hero_image_url"
+                placeholder="https://example.com/hero.jpg"
+                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Galereya rasmlari -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+            <i class="fa-solid fa-images text-primary"></i>
+            <h2 class="font-semibold text-gray-800">Galereya rasmlari</h2>
+            <span class="text-xs text-gray-400 ml-auto">"Mahsulot ko'rinishi" bo'limi</span>
+          </div>
+          <div class="p-6 space-y-5">
+            <p class="text-xs text-gray-400 bg-gray-50 rounded-xl px-4 py-2.5">
+              <i class="fa-solid fa-circle-info mr-1 text-primary"></i>
+              URL bo'sh qolsa — o'rniga avtomatik icon ko'rsatiladi. "Rasmlar" tabida rasm yuklab, URL sini bu yerga kiriting.
+            </p>
+
+            <!-- Gallery 1 -->
+            <div class="border border-gray-100 rounded-2xl p-4 space-y-3">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="w-6 h-6 bg-orange-100 text-primary rounded-full flex items-center justify-center text-xs font-bold">1</span>
+                <span class="text-sm font-medium text-gray-700">1-rasm — Shina teshilgan vaziyat</span>
+              </div>
+              <input id="f-gallery-1" type="url" name="gallery_image_1"
+                placeholder="https://... yoki /images/uploads/filename.jpg"
+                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
+              <div id="gallery-preview-1" class="hidden">
+                <img id="gallery-img-1" src="" alt="preview" class="h-24 rounded-xl border border-gray-200 object-cover" />
+              </div>
+            </div>
+
+            <!-- Gallery 2 -->
+            <div class="border border-gray-100 rounded-2xl p-4 space-y-3">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="w-6 h-6 bg-orange-100 text-primary rounded-full flex items-center justify-center text-xs font-bold">2</span>
+                <span class="text-sm font-medium text-gray-700">2-rasm — Deargon qo'llanilmoqda</span>
+              </div>
+              <input id="f-gallery-2" type="url" name="gallery_image_2"
+                placeholder="https://... yoki /images/uploads/filename.jpg"
+                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
+              <div id="gallery-preview-2" class="hidden">
+                <img id="gallery-img-2" src="" alt="preview" class="h-24 rounded-xl border border-gray-200 object-cover" />
+              </div>
+            </div>
+
+            <!-- Gallery 3 -->
+            <div class="border border-gray-100 rounded-2xl p-4 space-y-3">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="w-6 h-6 bg-orange-100 text-primary rounded-full flex items-center justify-center text-xs font-bold">3</span>
+                <span class="text-sm font-medium text-gray-700">3-rasm — Xavfsiz yo'l davom ettirildi</span>
+              </div>
+              <input id="f-gallery-3" type="url" name="gallery_image_3"
+                placeholder="https://... yoki /images/uploads/filename.jpg"
+                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
+              <div id="gallery-preview-3" class="hidden">
+                <img id="gallery-img-3" src="" alt="preview" class="h-24 rounded-xl border border-gray-200 object-cover" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-end">
+          <button type="submit" class="badge-btn text-white font-bold px-7 py-2.5 rounded-xl hover:opacity-90 transition flex items-center gap-2">
+            <i class="fa-solid fa-floppy-disk"></i> Saqlash
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ── IMAGES tab ── -->
+    <div id="panel-images" class="hidden space-y-6">
+
+      <!-- Upload zone -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+          <i class="fa-solid fa-cloud-arrow-up text-primary"></i>
+          <h2 class="font-semibold text-gray-800">Rasm yuklash</h2>
+        </div>
+        <div class="p-6">
+          <div id="drop-zone"
+            class="drop-zone rounded-2xl p-10 text-center cursor-pointer hover:border-primary hover:bg-orange-50/50 transition"
+            onclick="document.getElementById('file-input').click()"
+            ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event)">
+            <i class="fa-solid fa-image text-gray-300 text-5xl mb-3"></i>
+            <p class="text-gray-500 font-medium">Rasmni bu yerga tashlang yoki bosing</p>
+            <p class="text-gray-400 text-sm mt-1">JPG, PNG, WebP, GIF — maks. 5 MB</p>
+            <input id="file-input" type="file" accept="image/*" class="hidden" onchange="uploadFile(this.files[0])" />
+          </div>
+          <!-- Upload progress -->
+          <div id="upload-progress" class="hidden mt-4">
+            <div class="flex items-center gap-3 bg-orange-50 rounded-xl p-3">
+              <i class="fa-solid fa-spinner fa-spin text-primary"></i>
+              <span class="text-sm text-gray-700">Yuklanmoqda...</span>
+            </div>
+          </div>
+          <!-- Upload result -->
+          <div id="upload-result" class="hidden mt-4">
+            <div class="bg-green-50 border border-green-200 rounded-xl p-3">
+              <p class="text-green-700 text-sm font-medium mb-2">
+                <i class="fa-solid fa-check-circle mr-1"></i> Muvaffaqiyatli yuklandi!
+              </p>
+              <div class="flex items-center gap-2">
+                <input id="upload-url" type="text" readonly
+                  class="flex-1 bg-white border border-green-200 rounded-lg px-3 py-1.5 text-xs font-mono text-gray-700" />
+                <button onclick="copyUrl()" class="bg-green-500 hover:bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-1">
+                  <i class="fa-solid fa-copy"></i> Nusxa
+                </button>
+              </div>
+              <p class="text-green-600 text-xs mt-1">Bu URL ni Media yoki Sozlamalar bo'limida ishlatishingiz mumkin</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Uploaded files gallery -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-images text-primary"></i>
+            <h2 class="font-semibold text-gray-800">Yuklangan rasmlar</h2>
+          </div>
+          <button onclick="loadUploads()" class="text-sm text-gray-400 hover:text-primary transition">
+            <i class="fa-solid fa-rotate-right"></i>
+          </button>
+        </div>
+        <div class="p-6">
+          <div id="uploads-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <div class="text-gray-400 text-sm col-span-full flex items-center gap-2">
+              <i class="fa-solid fa-spinner fa-spin"></i> Yuklanmoqda...
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PASSWORD tab ── -->
+    <div id="panel-password" class="hidden">
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden max-w-md">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+          <i class="fa-solid fa-lock text-primary"></i>
+          <h2 class="font-semibold text-gray-800">Parolni o'zgartirish</h2>
+        </div>
+        <div class="p-6">
+          <form id="password-form" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Yangi parol</label>
+              <div class="relative">
+                <input id="new-password" type="password" placeholder="Kamida 6 belgi"
+                  class="w-full border border-gray-200 rounded-xl px-4 py-2.5 pr-10 text-sm focus:border-primary transition" required />
+                <button type="button" onclick="togglePwd('new-password')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-eye text-sm"></i></button>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Tasdiqlang</label>
+              <div class="relative">
+                <input id="confirm-password" type="password" placeholder="Parolni qayta kiriting"
+                  class="w-full border border-gray-200 rounded-xl px-4 py-2.5 pr-10 text-sm focus:border-primary transition" required />
+                <button type="button" onclick="togglePwd('confirm-password')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-eye text-sm"></i></button>
+              </div>
+            </div>
+            <div id="pwd-error" class="hidden text-red-500 text-sm bg-red-50 rounded-xl p-2 text-center"></div>
+            <button type="submit" class="badge-btn w-full text-white font-bold py-3 rounded-xl hover:opacity-90 transition">
+              <i class="fa-solid fa-key mr-2"></i>Parolni o'zgartirish
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-gray-900 text-white text-sm font-medium px-5 py-3 rounded-2xl shadow-xl flex items-center gap-2 opacity-0 pointer-events-none translate-y-4">
+  <i id="toast-icon" class="fa-solid fa-check-circle text-green-400"></i>
+  <span id="toast-msg">Saqlandi!</span>
+</div>
+
+<script>
+// ── Field groups ─────────────────────────────────────────────────────────────
+const contactFields = {
+  phone:         'f-phone',
+  whatsapp:      'f-whatsapp',
+  telegram_main: 'f-telegram-main',
+  telegram:      'f-telegram',
+  instagram:     'f-instagram',
+};
+const priceFields = {
+  price:          'f-price',
+  price_currency: 'f-price-currency',
+};
+const textsFields = {
+  hero_title:       'f-hero-title',
+  hero_highlight:   'f-hero-highlight',
+  hero_subtitle:    'f-hero-subtitle',
+  contact_title:    'f-contact-title',
+  contact_subtitle: 'f-contact-subtitle',
+  delivery_text:    'f-delivery-text',
+  site_title:       'f-site-title',
+  footer_copy:      'f-footer-copy',
+};
+const mediaFields = {
+  youtube_url:       'f-youtube',
+  product_image_url: 'f-product-img',
+  hero_image_url:    'f-hero-img',
+  gallery_image_1:   'f-gallery-1',
+  gallery_image_2:   'f-gallery-2',
+  gallery_image_3:   'f-gallery-3',
+};
+
+// ── Tabs ─────────────────────────────────────────────────────────────────────
+const TABS = ['contact','price','texts','media','images','password'];
+function showTab(tab) {
+  TABS.forEach(t => {
+    document.getElementById(`panel-${t}`).classList.toggle('hidden', t !== tab);
+    document.getElementById(`tab-${t}`).classList.toggle('active', t === tab);
+  });
+  if (tab === 'images') loadUploads();
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+function toast(msg, ok = true) {
+  const el   = document.getElementById('toast');
+  const icon = document.getElementById('toast-icon');
+  document.getElementById('toast-msg').textContent = msg;
+  icon.className = ok ? 'fa-solid fa-check-circle text-green-400' : 'fa-solid fa-circle-xmark text-red-400';
+  el.style.opacity = '1';
+  el.style.transform = 'translateX(-50%) translateY(0)';
+  setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateX(-50%) translateY(16px)'; }, 3000);
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function togglePwd(id) { const el = document.getElementById(id); el.type = el.type === 'password' ? 'text' : 'password'; }
+function val(id)       { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function setVal(id, v) { const el = document.getElementById(id); if (el) el.value = v || ''; }
+
+function getYoutubeId(url) {
+  const pts = [/youtu\.be\/([^?&#]+)/, /youtube\.com\/watch\?v=([^&#]+)/, /youtube\.com\/embed\/([^?&#]+)/];
+  for (const p of pts) { const m = (url||'').match(p); if (m) return m[1]; }
+  return null;
+}
+
+// ── Auth ──────────────────────────────────────────────────────────────────────
+async function checkAuth() {
+  const { loggedIn } = await (await fetch('/api/admin/check')).json();
+  if (loggedIn) showDashboard();
+}
+
+function showDashboard() {
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('dashboard-screen').classList.remove('hidden');
+  loadSettings();
+}
+
+document.getElementById('login-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const errEl = document.getElementById('login-error');
+  errEl.classList.add('hidden');
+  const btn = e.target.querySelector('button[type=submit]');
+  btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i>Tekshirilmoqda...';
+  const res  = await fetch('/api/admin/login', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({password: val('login-password')}) });
+  const data = await res.json();
+  if (data.success) { showDashboard(); }
+  else { errEl.textContent = data.error || 'Xato'; errEl.classList.remove('hidden'); btn.disabled = false; btn.innerHTML = 'Kirish <i class="fa-solid fa-arrow-right ml-1"></i>'; }
+});
+
+async function logout() {
+  await fetch('/api/admin/logout', { method: 'POST' });
+  location.reload();
+}
+
+// ── Load settings ─────────────────────────────────────────────────────────────
+async function loadSettings() {
+  const data = await (await fetch('/api/admin/settings')).json();
+
+  // Contact
+  setVal('f-phone',        data.phone);
+  setVal('f-whatsapp',     data.whatsapp);
+  setVal('f-telegram-main',data.telegram_main);
+  setVal('f-telegram',     data.telegram);
+  setVal('f-instagram',    data.instagram);
+
+  // Price
+  setVal('f-price',          data.price);
+  setVal('f-price-currency', data.price_currency);
+  updatePricePreview();
+
+  // Texts
+  setVal('f-hero-title',      data.hero_title);
+  setVal('f-hero-highlight',  data.hero_highlight);
+  setVal('f-hero-subtitle',   data.hero_subtitle);
+  setVal('f-contact-title',   data.contact_title);
+  setVal('f-contact-subtitle',data.contact_subtitle);
+  setVal('f-delivery-text',   data.delivery_text);
+  setVal('f-site-title',      data.site_title);
+  setVal('f-footer-copy',     data.footer_copy);
+
+  // Media
+  setVal('f-youtube',      data.youtube_url);
+  setVal('f-product-img',  data.product_image_url);
+  setVal('f-hero-img',     data.hero_image_url);
+  setVal('f-gallery-1',    data.gallery_image_1);
+  setVal('f-gallery-2',    data.gallery_image_2);
+  setVal('f-gallery-3',    data.gallery_image_3);
+
+  // Trigger previews
+  document.getElementById('f-youtube').dispatchEvent(new Event('input'));
+  document.getElementById('f-product-img').dispatchEvent(new Event('input'));
+  [1, 2, 3].forEach(n => document.getElementById(`f-gallery-${n}`).dispatchEvent(new Event('input')));
+}
+
+// ── Save section ─────────────────────────────────────────────────────────────
+async function saveSection(e, fields) {
+  e.preventDefault();
+  const btn = e.target.querySelector('button[type=submit]');
+  btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saqlanmoqda...';
+  const body = {};
+  for (const [key, id] of Object.entries(fields)) body[key] = val(id);
+  const res  = await fetch('/api/admin/settings', { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
+  const data = await res.json();
+  toast(data.success ? 'Muvaffaqiyatli saqlandi!' : (data.error || 'Xato'), !!data.success);
+  btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Saqlash';
+}
+
+// ── Password ──────────────────────────────────────────────────────────────────
+document.getElementById('password-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const errEl = document.getElementById('pwd-error');
+  const np = document.getElementById('new-password').value;
+  const cp = document.getElementById('confirm-password').value;
+  errEl.classList.add('hidden');
+  if (np !== cp)     { errEl.textContent = 'Parollar mos kelmadi'; errEl.classList.remove('hidden'); return; }
+  if (np.length < 6) { errEl.textContent = "Kamida 6 ta belgi bo'lishi kerak"; errEl.classList.remove('hidden'); return; }
+  const btn = e.target.querySelector('button[type=submit]');
+  btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Saqlanmoqda...';
+  const res  = await fetch('/api/admin/password', { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify({newPassword: np}) });
+  const data = await res.json();
+  if (data.success) { toast("Parol o'zgartirildi!"); e.target.reset(); }
+  else { errEl.textContent = data.error || 'Xato'; errEl.classList.remove('hidden'); }
+  btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-key mr-2"></i>Parolni o\'zgartirish';
+});
+
+// ── Price preview ─────────────────────────────────────────────────────────────
+function updatePricePreview() {
+  const p = val('f-price')          || '59 000';
+  const c = val('f-price-currency') || "so'm";
+  document.getElementById('price-preview').textContent    = p;
+  document.getElementById('currency-preview').textContent = c;
+}
+document.getElementById('f-price').addEventListener('input', updatePricePreview);
+document.getElementById('f-price-currency').addEventListener('input', updatePricePreview);
+
+// ── YouTube preview ───────────────────────────────────────────────────────────
+document.getElementById('f-youtube').addEventListener('input', function () {
+  const yid  = getYoutubeId(this.value.trim());
+  const wrap  = document.getElementById('yt-preview');
+  const frame = document.getElementById('yt-iframe');
+  if (yid) { frame.src = `https://www.youtube.com/embed/${yid}`; wrap.classList.remove('hidden'); }
+  else     { wrap.classList.add('hidden'); frame.src = ''; }
+});
+
+document.getElementById('f-product-img').addEventListener('input', function () {
+  const url  = this.value.trim();
+  const wrap = document.getElementById('product-img-preview');
+  const img  = document.getElementById('product-img-tag');
+  if (url) { img.src = url; wrap.classList.remove('hidden'); }
+  else     { wrap.classList.add('hidden'); }
+});
+
+// Gallery previews
+[1, 2, 3].forEach(n => {
+  document.getElementById(`f-gallery-${n}`).addEventListener('input', function () {
+    const url  = this.value.trim();
+    const wrap = document.getElementById(`gallery-preview-${n}`);
+    const img  = document.getElementById(`gallery-img-${n}`);
+    if (url) { img.src = url; wrap.classList.remove('hidden'); }
+    else     { wrap.classList.add('hidden'); }
+  });
+});
+
+// ── Image upload ──────────────────────────────────────────────────────────────
+function dragOver(e)  { e.preventDefault(); document.getElementById('drop-zone').classList.add('drag-over'); }
+function dragLeave()  { document.getElementById('drop-zone').classList.remove('drag-over'); }
+function dropFile(e)  { e.preventDefault(); dragLeave(); const f = e.dataTransfer.files[0]; if (f) uploadFile(f); }
+
+async function uploadFile(file) {
+  if (!file) return;
+  const prog   = document.getElementById('upload-progress');
+  const result = document.getElementById('upload-result');
+  prog.classList.remove('hidden');
+  result.classList.add('hidden');
+
+  const fd = new FormData();
+  fd.append('image', file);
+  const res  = await fetch('/api/admin/upload', { method: 'POST', body: fd });
+  const data = await res.json();
+
+  prog.classList.add('hidden');
+  if (data.url) {
+    document.getElementById('upload-url').value = data.url;
+    result.classList.remove('hidden');
+    loadUploads();
+  } else {
+    toast(data.error || "Yuklashda xato yuz berdi", false);
+  }
+  document.getElementById('file-input').value = '';
+}
+
+async function copyUrl() {
+  const url = document.getElementById('upload-url').value;
+  await navigator.clipboard.writeText(url).catch(() => {});
+  toast('URL nusxalandi!');
+}
+
+// ── Uploads gallery ───────────────────────────────────────────────────────────
+async function loadUploads() {
+  const grid = document.getElementById('uploads-grid');
+  grid.innerHTML = '<div class="text-gray-400 text-sm col-span-full flex items-center gap-2"><i class="fa-solid fa-spinner fa-spin"></i> Yuklanmoqda...</div>';
+  const files = await (await fetch('/api/admin/uploads')).json();
+
+  if (!files.length) {
+    grid.innerHTML = '<p class="text-gray-400 text-sm col-span-full">Hali hech qanday rasm yuklanmagan.</p>';
+    return;
+  }
+
+  grid.innerHTML = '';
+  files.forEach(f => {
+    const div = document.createElement('div');
+    div.className = 'img-thumb relative rounded-xl overflow-hidden aspect-square bg-gray-100 group cursor-pointer';
+    div.innerHTML = `
+      <img src="${f.url}" alt="${f.name}" class="w-full h-full object-cover" />
+      <div class="img-overlay absolute inset-0 bg-black/60 opacity-0 flex flex-col items-center justify-center gap-2 p-2">
+        <button onclick="copyToClipboard('${f.url}')"
+          class="text-white text-xs bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg transition w-full">
+          <i class="fa-solid fa-copy mr-1"></i> URL nusxa
+        </button>
+        <button onclick="deleteUpload('${f.name}', this)"
+          class="text-white text-xs bg-red-500/80 hover:bg-red-500 px-3 py-1.5 rounded-lg transition w-full">
+          <i class="fa-solid fa-trash mr-1"></i> O'chirish
+        </button>
+      </div>`;
+    grid.appendChild(div);
+  });
+}
+
+async function copyToClipboard(url) {
+  await navigator.clipboard.writeText(url).catch(() => {});
+  toast("URL nusxalandi: " + url);
+}
+
+async function deleteUpload(filename, btn) {
+  if (!confirm("Bu rasmni o'chirishni tasdiqlaysizmi?")) return;
+  btn.disabled = true;
+  const res  = await fetch(`/api/admin/uploads/${encodeURIComponent(filename)}`, { method: 'DELETE' });
+  const data = await res.json();
+  if (data.success) { toast("Rasm o'chirildi"); loadUploads(); }
+  else toast(data.error || "Xato", false);
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+checkAuth();
+</script>
+</body>
+</html>

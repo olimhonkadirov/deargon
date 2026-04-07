@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(xargs kill:*)",
+      "Bash(node --no-warnings server.js)",
+      "Bash(curl -s -o /dev/null -w \"HTTP: %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -s -o /dev/null -w \"HTTP: %{http_code}\\\\n\" http://localhost:3000/admin)",
+      "Bash(curl -s http://localhost:3000/api/settings)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); [print\\(f' {k}: {v[:40] if v else \\\\\"-\\\\\"}'\\) for k,v in d.items\\(\\)]\" echo \"=== Login test ===\")",
+      "Bash(curl -s -X POST http://localhost:3000/api/admin/login -H \"Content-Type: application/json\" -d '{\"password\":\"deargon2024\"}' kill %1)",
+      "Bash(python3 -c \" import sys, json d = json.load\\(sys.stdin\\) for k in ['gallery_image_1','gallery_image_2','gallery_image_3']: print\\(f' {k}: \\\\\"{d.get\\(k,\\\\\"NOT FOUND\\\\\"\\)}\\\\\"'\\) \" kill %1)"
+    ]
+  }
+}
