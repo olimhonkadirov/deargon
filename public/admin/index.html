@@ -152,14 +152,41 @@
               <input id="f-price-currency" name="price_currency" type="text" placeholder="so'm"
                 class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
             </div>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Eski narx <span class="text-gray-400 font-normal">(ustidan chiziladi)</span></label>
+                <input id="f-price-old" name="price_old" type="text" placeholder="99 000"
+                  class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Chegirma foizi <span class="text-gray-400 font-normal">(% belgisisiz)</span></label>
+                <input id="f-price-discount" name="price_discount" type="number" min="0" max="100" placeholder="40"
+                  class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
+              </div>
+            </div>
+
+            <!-- Countdown -->
+            <div class="border-t border-gray-100 pt-4">
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">
+                Aksiya tugash vaqti (Countdown)
+              </label>
+              <input id="f-countdown" name="countdown_end" type="datetime-local"
+                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
+              <p class="text-xs text-gray-400 mt-1">Bo'sh qolsa countdown ko'rsatilmaydi</p>
+            </div>
+
             <!-- Preview -->
             <div class="bg-orange-50 rounded-xl p-4">
               <p class="text-xs font-medium text-gray-600 mb-2">Ko'rinishi:</p>
-              <div class="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl px-4 py-2 shadow">
-                <i class="fa-solid fa-tag text-white/70 text-sm"></i>
-                <span class="text-xs text-white/70">Narxi:</span>
-                <span id="price-preview" class="text-lg font-black">59 000</span>
-                <span id="currency-preview" class="font-semibold">so'm</span>
+              <div class="flex items-center gap-3 flex-wrap">
+                <div class="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl px-4 py-2 shadow">
+                  <i class="fa-solid fa-tag text-white/70 text-sm"></i>
+                  <span class="text-xs text-white/70">Narxi:</span>
+                  <span id="price-preview" class="text-lg font-black">59 000</span>
+                  <span id="currency-preview" class="font-semibold">so'm</span>
+                </div>
+                <div class="text-gray-400 line-through text-sm" id="price-old-preview">99 000 so'm</div>
+                <div class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full" id="discount-preview">-40%</div>
               </div>
             </div>
           </div>
@@ -270,6 +297,18 @@
             <h2 class="font-semibold text-gray-800">Media URL lar</h2>
           </div>
           <div class="p-6 space-y-5">
+            <!-- Uzum Market -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">
+                <i class="fa-solid fa-bag-shopping mr-1" style="color:#7000ff;"></i>
+                Uzum Market havolasi
+              </label>
+              <input id="f-uzum-url" type="url" name="uzum_url"
+                placeholder="https://uzum.uz/uz/product/..."
+                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary transition" />
+              <p class="text-xs text-gray-400 mt-1">Saytdagi barcha "Uzum Marketda sotib olish" tugmalari shu linkka yo'naladi</p>
+            </div>
+
             <!-- YouTube -->
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1.5">YouTube video URL</label>
@@ -494,6 +533,9 @@ const contactFields = {
 const priceFields = {
   price:          'f-price',
   price_currency: 'f-price-currency',
+  price_old:      'f-price-old',
+  price_discount: 'f-price-discount',
+  countdown_end:  'f-countdown',
 };
 const textsFields = {
   hero_title:       'f-hero-title',
@@ -506,6 +548,7 @@ const textsFields = {
   footer_copy:      'f-footer-copy',
 };
 const mediaFields = {
+  uzum_url:          'f-uzum-url',
   youtube_url:       'f-youtube',
   product_image_url: 'f-product-img',
   hero_image_url:    'f-hero-img',
@@ -589,6 +632,18 @@ async function loadSettings() {
   // Price
   setVal('f-price',          data.price);
   setVal('f-price-currency', data.price_currency);
+  setVal('f-price-old',      data.price_old);
+  setVal('f-price-discount', data.price_discount);
+  // Countdown: "2026-04-10T23:59:59" → datetime-local formati
+  if (data.countdown_end) {
+    const dt = new Date(data.countdown_end);
+    if (!isNaN(dt)) {
+      const local = new Date(dt.getTime() - dt.getTimezoneOffset() * 60000)
+        .toISOString().slice(0,16);
+      setVal('f-countdown', local);
+    }
+  }
+  setVal('f-uzum-url', data.uzum_url);
   updatePricePreview();
 
   // Texts
@@ -621,7 +676,15 @@ async function saveSection(e, fields) {
   const btn = e.target.querySelector('button[type=submit]');
   btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saqlanmoqda...';
   const body = {};
-  for (const [key, id] of Object.entries(fields)) body[key] = val(id);
+  for (const [key, id] of Object.entries(fields)) {
+    let v = val(id);
+    // countdown_end: datetime-local (local time) → UTC ISO string
+    if (key === 'countdown_end' && v) {
+      const d = new Date(v);
+      v = isNaN(d) ? '' : d.toISOString();
+    }
+    body[key] = v;
+  }
   const res  = await fetch('/api/admin/settings', { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
   const data = await res.json();
   toast(data.success ? 'Muvaffaqiyatli saqlandi!' : (data.error || 'Xato'), !!data.success);
@@ -648,13 +711,20 @@ document.getElementById('password-form').addEventListener('submit', async e => {
 
 // ── Price preview ─────────────────────────────────────────────────────────────
 function updatePricePreview() {
-  const p = val('f-price')          || '59 000';
-  const c = val('f-price-currency') || "so'm";
+  const p  = val('f-price')          || '59 000';
+  const c  = val('f-price-currency') || "so'm";
+  const po = val('f-price-old')      || '99 000';
+  const pd = val('f-price-discount') || '40';
   document.getElementById('price-preview').textContent    = p;
   document.getElementById('currency-preview').textContent = c;
+  const oldEl = document.getElementById('price-old-preview');
+  if (oldEl) oldEl.textContent = po + ' ' + c;
+  const discEl = document.getElementById('discount-preview');
+  if (discEl) discEl.textContent = '-' + pd + '%';
 }
-document.getElementById('f-price').addEventListener('input', updatePricePreview);
-document.getElementById('f-price-currency').addEventListener('input', updatePricePreview);
+['f-price','f-price-currency','f-price-old','f-price-discount'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updatePricePreview);
+});
 
 // ── YouTube preview ───────────────────────────────────────────────────────────
 document.getElementById('f-youtube').addEventListener('input', function () {

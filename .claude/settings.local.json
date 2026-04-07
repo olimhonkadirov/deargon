@@ -9,7 +9,12 @@
       "Bash(curl -s http://localhost:3000/api/settings)",
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); [print\\(f' {k}: {v[:40] if v else \\\\\"-\\\\\"}'\\) for k,v in d.items\\(\\)]\" echo \"=== Login test ===\")",
       "Bash(curl -s -X POST http://localhost:3000/api/admin/login -H \"Content-Type: application/json\" -d '{\"password\":\"deargon2024\"}' kill %1)",
-      "Bash(python3 -c \" import sys, json d = json.load\\(sys.stdin\\) for k in ['gallery_image_1','gallery_image_2','gallery_image_3']: print\\(f' {k}: \\\\\"{d.get\\(k,\\\\\"NOT FOUND\\\\\"\\)}\\\\\"'\\) \" kill %1)"
+      "Bash(python3 -c \" import sys, json d = json.load\\(sys.stdin\\) for k in ['gallery_image_1','gallery_image_2','gallery_image_3']: print\\(f' {k}: \\\\\"{d.get\\(k,\\\\\"NOT FOUND\\\\\"\\)}\\\\\"'\\) \" kill %1)",
+      "WebFetch(domain:shopland.uz)",
+      "Bash(curl -s http://localhost:9944/api/settings)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\('countdown_end:', repr\\(d.get\\('countdown_end'\\)\\)\\); print\\('uzum_url:', repr\\(d.get\\('uzum_url'\\)\\)\\)\")",
+      "Bash(curl -v -c /tmp/jar.txt -b /tmp/jar.txt -X POST http://localhost:9944/api/admin/login -H 'Content-Type: application/json' -d '{\"password\":\"deargon2024\"}')",
+      "Bash(node --experimental-sqlite --no-warnings -e ':*)"
     ]
   }
 }

@@ -5,442 +5,1157 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title id="page-title">Deargon — Shina Tez Yamlash va Damlash</title>
   <meta name="description" content="Deargon — yo'lda shinangiz teshilganda bir daqiqada yamlash va damlash uchun professional aerosol." />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: { primary: { DEFAULT: '#F97316', dark: '#EA580C', light: '#FDBA74' } },
-          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
-        },
-      },
-    };
-  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
+    :root {
+      --or: #f97316;
+      --or2: #ea580c;
+      --grad: linear-gradient(135deg, #f97316, #ea580c);
+      --bg: linear-gradient(180deg, #fffbf7 0%, #fff6ef 100%);
+      --dark: #171717;
+      --muted: #6b7280;
+      --card: #ffffff;
+      --radius: 20px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    .hero-bg {
-      background:
-        linear-gradient(135deg, rgba(15,23,42,0.90) 0%, rgba(30,41,59,0.85) 50%, rgba(15,23,42,0.92) 100%),
-        url('/images/hero-bg.jpg') center/cover no-repeat;
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      min-height: 100vh;
+      padding-bottom: 80px; /* sticky CTA uchun */
     }
-    .orange-glow { box-shadow: 0 0 40px rgba(249,115,22,.35); }
-    .card-hover { transition: transform .25s ease, box-shadow .25s ease; }
-    .card-hover:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,.12); }
-    .step-line::after {
-      content: '';
+
+    /* ── Topbar ── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      background: rgba(255,251,247,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(249,115,22,.15);
+      padding: 0 20px;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo { font-weight: 900; font-size: 22px; letter-spacing: -.5px; }
+    .logo span { color: var(--or); }
+    .topbar-badge {
+      background: var(--grad);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 99px;
+      letter-spacing: .3px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 28px 20px 24px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff3e8;
+      border: 1px solid #fed7aa;
+      color: var(--or2);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 99px;
+      margin-bottom: 18px;
+      letter-spacing: .3px;
+    }
+
+    /* Hero 2-ustunli layout */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 680px) {
+      .hero-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Chap: rasm */
+    .hero-img-col { position: relative; }
+    .hero-img-wrap {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      background: linear-gradient(145deg, #fff3e8, #ffe4cc);
+      aspect-ratio: 3/4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 20px 60px rgba(249,115,22,.22);
+    }
+    .hero-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 20px;
+    }
+    .hero-img-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      color: var(--or);
+    }
+    .hero-img-placeholder i { font-size: 80px; opacity: .7; }
+    .hero-img-placeholder span { font-size: 22px; font-weight: 900; letter-spacing: 2px; }
+
+    /* "Video ko'rish" tugmasi — rasмning chap-pastki burchagi */
+    .video-watch-btn {
       position: absolute;
-      top: 28px;
-      left: calc(50% + 36px);
-      width: calc(100% - 72px);
-      height: 2px;
-      background: linear-gradient(to right, #F97316, #EA580C);
+      bottom: 14px;
+      left: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,0,0,.72);
+      backdrop-filter: blur(8px);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 9px 16px;
+      border-radius: 99px;
+      border: none;
+      cursor: pointer;
+      transition: background .18s, transform .18s;
+      z-index: 2;
     }
-    @media (max-width: 767px) { .step-line::after { display: none; } }
-    .faq-content { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
-    .faq-content.open { max-height: 220px; }
-    .faq-icon { transition: transform .3s ease; }
-    .faq-icon.open { transform: rotate(45deg); }
-    .tg-pulse { animation: tg-anim 2.5s infinite; }
-    @keyframes tg-anim {
-      0%,100% { box-shadow: 0 0 0 0 rgba(37,175,255,.5); }
-      50%      { box-shadow: 0 0 0 14px rgba(37,175,255,0); }
+    .video-watch-btn:hover { background: rgba(0,0,0,.88); transform: scale(1.04); }
+    .video-watch-btn .play-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--grad);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      flex-shrink: 0;
+      animation: radar 2.2s infinite;
     }
-    .star { color: #F97316; }
-    .badge { background: linear-gradient(135deg,#F97316,#EA580C); }
-    .section-title::after {
-      content: '';
-      display: block;
+    @keyframes radar {
+      0%   { box-shadow: 0 0 0 0 rgba(249,115,22,.6); }
+      70%  { box-shadow: 0 0 0 14px rgba(249,115,22,0); }
+      100% { box-shadow: 0 0 0 0 rgba(249,115,22,0); }
+    }
+
+    /* O'ng: narx + matn */
+    .hero-info-col {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      padding-top: 4px;
+    }
+    .hero-title {
+      font-size: clamp(26px, 5vw, 40px);
+      font-weight: 900;
+      line-height: 1.2;
+      color: var(--dark);
+    }
+    .hero-title em { color: var(--or); font-style: normal; }
+    .hero-sub {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* Narx qutisi */
+    .hero-price-box {
+      background: #fff;
+      border: 1.5px solid #fed7aa;
+      border-radius: 18px;
+      padding: 18px 20px;
+      box-shadow: 0 4px 20px rgba(249,115,22,.1);
+    }
+    .price-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; }
+    .price-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+    .price-new { font-size: 40px; font-weight: 900; color: var(--or); line-height: 1; }
+    .price-currency { font-size: 18px; font-weight: 700; color: var(--or); }
+    .price-old-row { display: flex; align-items: center; gap: 8px; }
+    .price-old { font-size: 16px; color: #9ca3af; text-decoration: line-through; font-weight: 500; }
+    .price-discount {
+      background: #ef4444;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 99px;
+    }
+
+    /* Countdown */
+    .cd-wrap { margin-top: 14px; }
+    .cd-label-top { font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 7px; }
+    .countdown { display: flex; gap: 6px; align-items: center; }
+    .cd-box {
+      background: var(--dark);
+      color: #fff;
+      border-radius: 10px;
+      padding: 7px 10px;
+      text-align: center;
+      min-width: 50px;
+      flex: 1;
+    }
+    .cd-num { font-size: 22px; font-weight: 900; line-height: 1; display: block; }
+    .cd-lbl { font-size: 9px; opacity: .55; text-transform: uppercase; letter-spacing: .5px; margin-top: 2px; display: block; }
+    .cd-sep { font-size: 22px; font-weight: 900; color: var(--or); flex-shrink: 0; }
+
+    /* ── Video Modal ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0,0,0,.82);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+    .modal-box {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 20px;
+      overflow: hidden;
+      background: #000;
+      aspect-ratio: 16/9;
+      transform: scale(.92);
+      transition: transform .25s ease;
+    }
+    .modal-overlay.active .modal-box { transform: scale(1); }
+    .modal-box iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+    .modal-close {
+      position: absolute;
+      top: -44px;
+      right: 0;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.15);
+      border: none;
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .18s;
+    }
+    .modal-close:hover { background: rgba(255,255,255,.28); }
+    .modal-no-video {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: rgba(255,255,255,.5);
+    }
+    .modal-no-video i { font-size: 48px; }
+
+    /* ── CTA buttons ── */
+    .cta-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 960px;
+      margin: 0 auto 32px;
+      padding: 0 20px;
+    }
+    .btn-uzum {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #7000ff;
+      color: #fff;
+      font-size: 17px;
+      font-weight: 800;
+      padding: 18px 28px;
+      border-radius: 16px;
+      text-decoration: none;
+      box-shadow: 0 8px 32px rgba(112,0,255,.35);
+      transition: opacity .18s, transform .18s;
+    }
+    .btn-uzum:hover { opacity: .92; transform: translateY(-1px); }
+    .btn-tg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #fff;
+      color: var(--dark);
+      font-size: 15px;
+      font-weight: 700;
+      padding: 15px 28px;
+      border-radius: 16px;
+      text-decoration: none;
+      border: 1.5px solid #e5e7eb;
+      transition: border-color .18s, transform .18s;
+    }
+    .btn-tg:hover { border-color: var(--or); transform: translateY(-1px); }
+    .btn-tg i { color: #229ed9; font-size: 20px; }
+
+    /* ── Section wrapper ── */
+    .section { max-width: 960px; margin: 0 auto 40px; padding: 0 20px; }
+    .section-head {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .section-head h2 { font-size: clamp(22px, 5vw, 32px); font-weight: 900; }
+    .section-head h2 em { color: var(--or); font-style: normal; }
+    .section-head p { font-size: 14px; color: var(--muted); margin-top: 6px; }
+
+    /* ── Benefits ── */
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 640px) { .benefits-grid { grid-template-columns: repeat(2, 1fr); } }
+    .benefit-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 20px 16px;
+      text-align: center;
+      border: 1px solid #f3f4f6;
+      box-shadow: 0 2px 12px rgba(0,0,0,.04);
+      transition: transform .18s ease;
+    }
+    .benefit-card:hover { transform: translateY(-4px); }
+    .benefit-icon {
       width: 56px;
-      height: 4px;
-      background: #F97316;
-      border-radius: 2px;
-      margin: 12px auto 0;
+      height: 56px;
+      border-radius: 16px;
+      background: #fff3e8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      font-size: 24px;
+      color: var(--or);
     }
-    .price-badge {
-      background: linear-gradient(135deg,#F97316,#EA580C);
-      box-shadow: 0 8px 32px rgba(249,115,22,.4);
+    .benefit-card h3 { font-size: 13px; font-weight: 700; line-height: 1.4; }
+    .benefit-card p { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+
+    /* ── Steps ── */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      position: relative;
     }
+    @media (max-width: 640px) { .steps-grid { grid-template-columns: 1fr; } }
+    .step-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      text-align: center;
+      border: 1px solid #f3f4f6;
+      box-shadow: 0 2px 12px rgba(0,0,0,.04);
+      position: relative;
+    }
+    .step-num {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--grad);
+      color: #fff;
+      font-size: 20px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+      box-shadow: 0 4px 16px rgba(249,115,22,.4);
+    }
+    .step-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 16px;
+      overflow: hidden;
+      margin: 0 auto 12px;
+      background: #fff3e8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--or);
+      font-size: 28px;
+    }
+    .step-img img { width: 100%; height: 100%; object-fit: cover; }
+    .step-card h3 { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
+    .step-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* ── Gallery ── */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 640px) { .gallery-grid { grid-template-columns: repeat(2, 1fr); } }
+    .gallery-item {
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      background: #f3f4f6;
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s ease; }
+    .gallery-item:hover img { transform: scale(1.05); }
+    .gallery-item-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,.55) 0%, transparent 50%);
+      opacity: 0;
+      transition: opacity .25s;
+      display: flex;
+      align-items: flex-end;
+      padding: 10px;
+    }
+    .gallery-item:hover .gallery-item-overlay { opacity: 1; }
+    .gallery-item-overlay span { color: #fff; font-size: 12px; font-weight: 600; }
+    .gallery-icon { font-size: 36px; color: #d1d5db; }
+
+    /* ── Reviews ── */
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 640px) { .reviews-grid { grid-template-columns: 1fr; } }
+    .review-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 20px;
+      border: 1px solid #f3f4f6;
+      box-shadow: 0 2px 12px rgba(0,0,0,.04);
+      transition: transform .18s;
+    }
+    .review-card:hover { transform: translateY(-3px); }
+    .review-stars { color: #f59e0b; font-size: 14px; margin-bottom: 10px; letter-spacing: 1px; }
+    .review-text { font-size: 13px; color: #374151; line-height: 1.65; margin-bottom: 14px; }
+    .review-author { display: flex; align-items: center; gap: 10px; }
+    .review-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--grad);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .review-name { font-size: 13px; font-weight: 700; }
+    .review-city { font-size: 11px; color: var(--muted); }
+    .review-verified { font-size: 10px; color: #16a34a; font-weight: 600; display: flex; align-items: center; gap: 3px; margin-top: 2px; }
+
+    /* ── Comparison ── */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 480px) { .compare-grid { grid-template-columns: 1fr; } }
+    .compare-card {
+      border-radius: var(--radius);
+      padding: 22px;
+      border: 2px solid #f3f4f6;
+    }
+    .compare-card.highlight {
+      border-color: var(--or);
+      background: linear-gradient(135deg, #fff8f3, #fff3e8);
+      box-shadow: 0 8px 32px rgba(249,115,22,.15);
+    }
+    .compare-head { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .compare-badge {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 99px;
+      background: var(--grad);
+      color: #fff;
+    }
+    .compare-badge.gray { background: #e5e7eb; color: #6b7280; }
+    .compare-head h3 { font-size: 16px; font-weight: 800; }
+    .compare-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; font-size: 13px; }
+    .compare-row .ic { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+    .ic-yes { color: #16a34a; }
+    .ic-no  { color: #ef4444; }
+
+    /* ── FAQ ── */
+    .faq-list { display: flex; flex-direction: column; gap: 8px; }
+    .faq-item {
+      background: var(--card);
+      border-radius: 14px;
+      border: 1px solid #f3f4f6;
+      overflow: hidden;
+    }
+    .faq-q {
+      width: 100%;
+      text-align: left;
+      padding: 16px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--dark);
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      transition: color .2s;
+    }
+    .faq-q:hover { color: var(--or); }
+    .faq-icon { font-size: 16px; color: var(--or); flex-shrink: 0; transition: transform .3s; }
+    .faq-icon.open { transform: rotate(45deg); }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+    .faq-a.open { max-height: 200px; }
+    .faq-a-inner { padding: 0 20px 16px; font-size: 13px; color: var(--muted); line-height: 1.7; }
+    .faq-a-inner a { color: var(--or); }
+
+    /* ── Contact ── */
+    .contact-block {
+      background: linear-gradient(135deg, #1a1a1a, #2d1810);
+      border-radius: 28px;
+      padding: 40px 28px;
+      text-align: center;
+      color: #fff;
+    }
+    .contact-block h2 { font-size: 26px; font-weight: 900; margin-bottom: 8px; }
+    .contact-block h2 em { color: var(--or); font-style: normal; }
+    .contact-block p { font-size: 14px; color: rgba(255,255,255,.6); margin-bottom: 24px; }
+    .contact-phone {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.15);
+      color: #fff;
+      font-size: 26px;
+      font-weight: 900;
+      padding: 16px 28px;
+      border-radius: 16px;
+      text-decoration: none;
+      margin-bottom: 20px;
+      transition: background .2s;
+    }
+    .contact-phone:hover { background: rgba(255,255,255,.14); }
+    .contact-phone i { color: var(--or); }
+    .contact-socials { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
+    .btn-social {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 12px 22px;
+      border-radius: 12px;
+      text-decoration: none;
+      color: #fff;
+      transition: opacity .18s, transform .18s;
+    }
+    .btn-social:hover { opacity: .88; transform: translateY(-1px); }
+    .btn-social.tg  { background: #229ed9; }
+    .btn-social.wa  { background: #25d366; }
+    .btn-social.ig  { background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); }
+    .contact-info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 24px;
+    }
+    @media (max-width: 480px) { .contact-info-grid { grid-template-columns: 1fr; } }
+    .contact-info-card {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,.85);
+    }
+    .contact-info-card i { color: var(--or); display: block; font-size: 20px; margin-bottom: 6px; }
+
+    /* ── Footer ── */
+    footer {
+      background: #0f0f0f;
+      padding: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #4b5563;
+      margin-bottom: 80px;
+    }
+    footer span { color: var(--or); font-weight: 900; }
+
+    /* ── Sticky CTA ── */
+    .sticky-cta {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 70;
+      padding: 10px 16px;
+      background: rgba(255,255,255,.97);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+    }
+    .sticky-cta .btn-uzum {
+      max-width: 500px;
+      width: 100%;
+      padding: 13px 20px;
+      font-size: 15px;
+      border-radius: 14px;
+      margin: 0;
+      box-shadow: 0 4px 20px rgba(112,0,255,.3);
+    }
+
+    /* ── Warning banner ── */
+    .warn-banner {
+      background: linear-gradient(135deg, #fff7ed, #ffedd5);
+      border: 1px solid #fed7aa;
+      border-radius: 14px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .warn-banner i { color: var(--or); font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .warn-banner p { font-size: 13px; color: #92400e; line-height: 1.6; }
+
+    /* ── Utility ── */
+    .mt-8 { margin-top: 8px; }
+    .text-center { text-align: center; }
   </style>
 </head>
-<body class="font-sans text-gray-800 bg-white">
+<body>
 
-<!-- ════════════ NAVBAR ════════════ -->
-<nav class="fixed top-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-sm border-b border-gray-800">
-  <div class="max-w-6xl mx-auto px-4 flex items-center justify-between h-16">
-    <a href="#" class="text-2xl font-black text-white tracking-tight">DEAR<span class="text-primary">GON</span></a>
-    <div class="hidden md:flex items-center gap-7 text-sm font-medium text-gray-300">
-      <a href="#features"     class="hover:text-primary transition-colors">Afzalliklar</a>
-      <a href="#how-it-works" class="hover:text-primary transition-colors">Qanday ishlaydi</a>
-      <a href="#gallery"      class="hover:text-primary transition-colors">Galereya</a>
-      <a href="#video"        class="hover:text-primary transition-colors">Video</a>
-      <a href="#reviews"      class="hover:text-primary transition-colors">Fikrlar</a>
-      <a href="#contact"      class="hover:text-primary transition-colors">Aloqa</a>
-    </div>
-    <a href="#contact" class="badge text-white text-sm font-semibold px-4 py-2 rounded-full hover:opacity-90 transition">
-      Buyurtma berish
-    </a>
-  </div>
-</nav>
+<!-- ════════════ TOPBAR ════════════ -->
+<header class="topbar">
+  <div class="logo">DEAR<span>GON</span></div>
+  <div class="topbar-badge">🔥 Ko'plab mijozlar tanlovi</div>
+  <a href="#contact" style="font-size:13px;font-weight:700;color:var(--or);text-decoration:none;">
+    Buyurtma →
+  </a>
+</header>
 
 <!-- ════════════ HERO ════════════ -->
-<section class="hero-bg min-h-screen flex items-center pt-16" id="home">
-  <div class="max-w-6xl mx-auto px-4 py-20 grid md:grid-cols-2 gap-12 items-center">
-    <div class="text-white">
-      <span class="inline-block badge text-white text-xs font-bold px-3 py-1 rounded-full mb-5 uppercase tracking-widest">
-        #1 Shina Yordamchisi
-      </span>
-      <h1 class="text-4xl md:text-5xl lg:text-6xl font-black leading-tight mb-5">
-        <span id="hero-title">Shina teshildimi?</span><br />
-        <span id="hero-highlight" class="text-primary">Xavotir yo'q!</span>
-      </h1>
-      <p id="hero-subtitle" class="text-gray-300 text-lg leading-relaxed mb-6 max-w-md">
-        <strong class="text-white">Deargon</strong> aerosoli shina teshigini muhrlaydi va bir vaqtning
-        o'zida damlaydi — bor-yo'g'i bir necha daqiqada. G'ildirak almashtirish shart emas.
-      </p>
+<div class="hero">
+  <div class="hero-eyebrow">
+    <i class="fa-solid fa-shield-halved"></i> #1 Shina yordamchisi
+  </div>
 
-      <!-- Narx badge -->
-      <div class="inline-flex items-center gap-3 price-badge text-white rounded-2xl px-5 py-3 mb-7">
-        <i class="fa-solid fa-tag text-white/80"></i>
-        <span class="text-sm font-medium text-white/80">Narxi:</span>
-        <span id="price-display" class="text-2xl font-black">59 000</span>
-        <span id="price-currency-display" class="text-lg font-semibold">so'm</span>
-      </div>
-
-      <div class="flex flex-wrap gap-4">
-        <a href="#contact" class="badge text-white font-bold px-7 py-3.5 rounded-full orange-glow hover:opacity-90 transition text-base">
-          <i class="fa-solid fa-cart-shopping mr-2"></i>Hozir buyurtma bering
-        </a>
-        <a href="#how-it-works" class="border border-gray-500 text-gray-200 font-semibold px-7 py-3.5 rounded-full hover:border-primary hover:text-primary transition text-base">
-          <i class="fa-solid fa-circle-play mr-2"></i>Qanday ishlaydi?
-        </a>
-      </div>
-      <div class="flex gap-8 mt-10 pt-8 border-t border-gray-700">
-        <div><div class="text-3xl font-black text-primary">&lt;5</div><div class="text-gray-400 text-sm">daqiqa</div></div>
-        <div><div class="text-3xl font-black text-primary">100%</div><div class="text-gray-400 text-sm">muhrlash</div></div>
-        <div><div class="text-3xl font-black text-primary">1000+</div><div class="text-gray-400 text-sm">mijoz</div></div>
+  <div class="hero-grid">
+    <!-- CHAP: mahsulot rasmi + video button -->
+    <div class="hero-img-col">
+      <div class="hero-img-wrap">
+        <img id="product-img" src="/images/product.png" alt="Deargon mahsuloti"
+          onerror="this.style.display='none'; document.getElementById('product-fallback').style.display='flex';" />
+        <div id="product-fallback" class="hero-img-placeholder" style="display:none;">
+          <i class="fa-solid fa-spray-can-sparkles"></i>
+          <span>DEARGON</span>
+        </div>
+        <!-- Video ko'rish button — chap pastki burchak -->
+        <button class="video-watch-btn" id="video-watch-btn" onclick="openVideoModal()">
+          <span class="play-circle"><i class="fa-solid fa-play" style="margin-left:2px;font-size:10px;"></i></span>
+          Video ko'rish
+        </button>
       </div>
     </div>
-    <div class="flex justify-center">
-      <div class="relative">
-        <div class="w-72 h-72 md:w-80 md:h-80 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center orange-glow">
-          <div class="w-56 h-56 md:w-64 md:h-64 rounded-full bg-primary/15 border border-primary/40 flex items-center justify-center">
-            <div id="hero-product-img" class="flex flex-col items-center gap-3 text-primary">
-              <img id="product-local-img" src="/images/product.png" alt="Deargon mahsuloti"
-                class="w-48 h-48 md:w-56 md:h-56 object-contain drop-shadow-2xl"
-                onerror="this.style.display='none'; document.getElementById('product-fallback').style.display='flex';" />
-              <div id="product-fallback" class="flex-col items-center gap-3 hidden">
-                <i class="fa-solid fa-spray-can-sparkles text-7xl md:text-8xl"></i>
-                <span class="text-white font-black text-2xl tracking-widest">DEARGON</span>
-              </div>
+
+    <!-- O'NG: sarlavha + narx + countdown -->
+    <div class="hero-info-col">
+      <div>
+        <h1 class="hero-title" id="hero-title-el">
+          Shina teshildimi?<br><em id="hero-highlight-el">Xavotir yo'q!</em>
+        </h1>
+      </div>
+      <p class="hero-sub" id="hero-subtitle-el">
+        Deargon aerosoli shina teshigini muhrlaydi va bir vaqtning o'zida damlaydi —
+        bor-yo'g'i bir necha daqiqada. G'ildirak almashtirish shart emas.
+      </p>
+
+      <!-- Narx qutisi -->
+      <div class="hero-price-box">
+        <div class="price-label">Mahsulot narxi</div>
+        <div class="price-row">
+          <span id="price-display" class="price-new">59 000</span>
+          <span id="price-currency-display" class="price-currency">so'm</span>
+        </div>
+        <div class="price-old-row">
+          <span id="price-old-display" class="price-old">99 000 so'm</span>
+          <span id="price-discount-display" class="price-discount">-40%</span>
+        </div>
+
+        <!-- Countdown -->
+        <div class="cd-wrap" id="cd-wrap" style="display:none">
+          <div class="cd-label-top">⏳ Aksiya tugashiga:</div>
+          <div class="countdown">
+            <div class="cd-box">
+              <span class="cd-num" id="cd-d" style="display:none;">00</span>
+              <span class="cd-num" id="cd-h">00</span>
+              <span class="cd-lbl" id="cd-h-lbl">soat</span>
+            </div>
+            <span class="cd-sep">:</span>
+            <div class="cd-box">
+              <span class="cd-num" id="cd-m">00</span>
+              <span class="cd-lbl">daq</span>
+            </div>
+            <span class="cd-sep">:</span>
+            <div class="cd-box">
+              <span class="cd-num" id="cd-s">00</span>
+              <span class="cd-lbl">son</span>
             </div>
           </div>
         </div>
-        <div class="absolute -top-3 -right-4 bg-white rounded-2xl shadow-xl px-3 py-2 text-xs font-bold text-gray-800 flex items-center gap-1.5">
-          <i class="fa-solid fa-bolt text-primary"></i> Ultra tez
-        </div>
-        <div class="absolute -bottom-3 -left-4 bg-white rounded-2xl shadow-xl px-3 py-2 text-xs font-bold text-gray-800 flex items-center gap-1.5">
-          <i class="fa-solid fa-shield-halved text-green-500"></i> Xavfsiz
-        </div>
       </div>
-    </div>
-  </div>
-  <a href="#features" class="absolute bottom-8 left-1/2 -translate-x-1/2 text-gray-500 hover:text-primary transition animate-bounce hidden md:block">
-    <i class="fa-solid fa-chevron-down text-xl"></i>
-  </a>
-</section>
 
-<!-- ════════════ FEATURES ════════════ -->
-<section class="py-20 bg-gray-50" id="features">
-  <div class="max-w-6xl mx-auto px-4">
-    <h2 class="text-3xl md:text-4xl font-black text-center section-title mb-14">
-      Nega aynan <span class="text-primary">Deargon</span>?
-    </h2>
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      <div class="bg-white rounded-2xl p-6 card-hover shadow-sm border border-gray-100">
-        <div class="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center mb-4"><i class="fa-solid fa-wrench text-primary text-xl"></i></div>
-        <h3 class="font-bold text-lg mb-2">Shina almashtirish shart emas</h3>
-        <p class="text-gray-500 text-sm leading-relaxed">G'ildirakni ko'tarish, gaechni burab o'tirish kerak emas. Faqat bir balloncha.</p>
-      </div>
-      <div class="bg-white rounded-2xl p-6 card-hover shadow-sm border border-gray-100">
-        <div class="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center mb-4"><i class="fa-solid fa-bolt text-primary text-xl"></i></div>
-        <h3 class="font-bold text-lg mb-2">Bir necha daqiqada tayyor</h3>
-        <p class="text-gray-500 text-sm leading-relaxed">Ulab, bosib, kutasiz. 3–5 daqiqada shina muhrlangan va damlangan.</p>
-      </div>
-      <div class="bg-white rounded-2xl p-6 card-hover shadow-sm border border-gray-100">
-        <div class="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center mb-4"><i class="fa-solid fa-shield-halved text-primary text-xl"></i></div>
-        <h3 class="font-bold text-lg mb-2">Mix, vint, metaldan himoya</h3>
-        <p class="text-gray-500 text-sm leading-relaxed">Kichik metall bo'laklar sababli yuzaga kelgan teshiklarni ishonchli muhrlaydi.</p>
-      </div>
-      <div class="bg-white rounded-2xl p-6 card-hover shadow-sm border border-gray-100">
-        <div class="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center mb-4"><i class="fa-solid fa-wind text-primary text-xl"></i></div>
-        <h3 class="font-bold text-lg mb-2">Shinani bir vaqtda damlaydi</h3>
-        <p class="text-gray-500 text-sm leading-relaxed">Muhrlash va damlash jarayoni ayni vaqtda sodir bo'ladi. Ikki ish — bir harakat.</p>
-      </div>
-      <div class="bg-white rounded-2xl p-6 card-hover shadow-sm border border-gray-100">
-        <div class="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center mb-4"><i class="fa-solid fa-droplet-slash text-primary text-xl"></i></div>
-        <h3 class="font-bold text-lg mb-2">Toza ishlaydi</h3>
-        <p class="text-gray-500 text-sm leading-relaxed">Ko'pik faqat shina ichida qoladi. Qo'lingiz, mashinangiz ifloslanmaydi.</p>
-      </div>
-      <div class="bg-white rounded-2xl p-6 card-hover shadow-sm border border-gray-100">
-        <div class="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center mb-4"><i class="fa-solid fa-car text-primary text-xl"></i></div>
-        <h3 class="font-bold text-lg mb-2">Yengil avtomobillar uchun</h3>
-        <p class="text-gray-500 text-sm leading-relaxed">Sedan, hatchback, crossover — barcha yengil avto shinalariga mos keladi.</p>
-      </div>
-      <div class="bg-white rounded-2xl p-6 card-hover shadow-sm border border-gray-100">
-        <div class="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center mb-4"><i class="fa-solid fa-suitcase-rolling text-primary text-xl"></i></div>
-        <h3 class="font-bold text-lg mb-2">Bagajda olib yurish qulay</h3>
-        <p class="text-gray-500 text-sm leading-relaxed">Yengil va ixcham. Doim bagajda tayyorligida turing — kerak bo'lgunicha joy olmaydi.</p>
-      </div>
-      <div class="badge rounded-2xl p-6 card-hover flex flex-col justify-between text-white">
-        <div>
-          <i class="fa-solid fa-star text-white/80 text-2xl mb-3"></i>
-          <h3 class="font-bold text-lg mb-2">Har bir mashinada bo'lishi shart!</h3>
-          <p class="text-white/80 text-sm leading-relaxed">Ehtiyotkorlik — eng yaxshi yo'ldosh. Yo'lda hech qachon qotib qolmang.</p>
-        </div>
-        <a href="#contact" class="mt-4 inline-block bg-white text-primary font-bold text-sm px-4 py-2 rounded-full hover:bg-orange-50 transition text-center">
-          Buyurtma berish →
+      <!-- CTA tugmalar hero ichida -->
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <a id="uzum-hero-link" href="https://uzum.uz" target="_blank" rel="noopener" class="btn-uzum" style="font-size:15px;padding:15px 20px;border-radius:14px;">
+          <i class="fa-solid fa-bag-shopping"></i>
+          Uzum Marketda sotib olish
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <a id="tg-hero-link" href="https://t.me/deargonAdmin" target="_blank" rel="noopener" class="btn-tg" style="font-size:14px;padding:13px 20px;border-radius:14px;">
+          <i class="fa-brands fa-telegram"></i>
+          Telegram orqali buyurtma
         </a>
       </div>
     </div>
   </div>
-</section>
+</div>
+
+<!-- ════════════ VIDEO MODAL ════════════ -->
+<div class="modal-overlay" id="video-modal" onclick="closeVideoModal(event)">
+  <div class="modal-box" id="modal-box">
+    <button class="modal-close" onclick="closeVideoModal()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div class="modal-no-video" id="modal-no-video">
+      <i class="fa-brands fa-youtube" style="color:#ef4444;"></i>
+      <p style="font-size:13px;">YouTube link admin panelda kiritilmagan</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════ BENEFITS ════════════ -->
+<div class="section">
+  <div class="section-head">
+    <h2>Nega aynan <em>Deargon</em>?</h2>
+    <p>7 ta asosiy sabab</p>
+  </div>
+  <div class="benefits-grid">
+    <div class="benefit-card">
+      <div class="benefit-icon"><i class="fa-solid fa-wrench"></i></div>
+      <h3>Shina almashtirish shart emas</h3>
+      <p>Gaechni burab o'tirish kerak emas</p>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon"><i class="fa-solid fa-bolt"></i></div>
+      <h3>3–5 daqiqada tayyor</h3>
+      <p>Ulab, bosib, yuring — xolos</p>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon"><i class="fa-solid fa-shield-halved"></i></div>
+      <h3>Metaldan himoya</h3>
+      <p>Mix, vint, metall bo'laklar</p>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon"><i class="fa-solid fa-wind"></i></div>
+      <h3>Bir vaqtda damlaydi</h3>
+      <p>Muhrlab va damlaydi bir vaqtda</p>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon"><i class="fa-solid fa-droplet-slash"></i></div>
+      <h3>Toza ishlaydi</h3>
+      <p>Ko'pik faqat shina ichida</p>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon"><i class="fa-solid fa-car"></i></div>
+      <h3>Yengil avtolar uchun</h3>
+      <p>Sedan, crossover, hatchback</p>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon"><i class="fa-solid fa-suitcase-rolling"></i></div>
+      <h3>Bagajda qulay</h3>
+      <p>Yengil, ixcham, doim tayyor</p>
+    </div>
+    <div class="benefit-card" style="background:var(--grad);border-color:transparent;">
+      <div class="benefit-icon" style="background:rgba(255,255,255,.2);color:#fff;"><i class="fa-solid fa-star"></i></div>
+      <h3 style="color:#fff;">Har bir mashinada bo'lsin!</h3>
+      <p style="color:rgba(255,255,255,.75);">Ehtiyotkorlik — eng yaxshi yo'ldosh</p>
+    </div>
+  </div>
+</div>
 
 <!-- ════════════ HOW IT WORKS ════════════ -->
-<section class="py-20 bg-white" id="how-it-works">
-  <div class="max-w-5xl mx-auto px-4">
-    <h2 class="text-3xl md:text-4xl font-black text-center section-title mb-14">
-      Qanday <span class="text-primary">ishlatiladi?</span>
-    </h2>
-    <div class="grid md:grid-cols-3 gap-8 md:gap-4">
-      <div class="relative text-center step-line">
-        <div class="w-16 h-16 badge rounded-full flex items-center justify-center mx-auto mb-5 text-white text-2xl font-black shadow-lg orange-glow">1</div>
-        <div class="w-24 h-24 rounded-2xl overflow-hidden mx-auto mb-4 bg-orange-50 flex items-center justify-center">
-          <img src="/images/how-to-1.jpg" alt="1-qadam: ulash" class="w-full h-full object-cover"
-            onerror="this.outerHTML='<i class=&quot;fa-solid fa-plug text-primary text-3xl&quot;></i>'" />
-        </div>
-        <h3 class="font-bold text-xl mb-2">Ulab oling</h3>
-        <p class="text-gray-500 text-sm leading-relaxed max-w-xs mx-auto">Deargon ballonchasidagi nayni shina valf (nippe)ga ulang.</p>
+<div class="section">
+  <div class="section-head">
+    <h2>Qanday <em>ishlatiladi?</em></h2>
+    <p>Atigi 3 qadam</p>
+  </div>
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-img">
+        <img src="/images/how-to-1.jpg" alt="Ulash"
+          onerror="this.outerHTML='<i class=&quot;fa-solid fa-plug&quot;></i>'" />
       </div>
-      <div class="relative text-center step-line">
-        <div class="w-16 h-16 badge rounded-full flex items-center justify-center mx-auto mb-5 text-white text-2xl font-black shadow-lg orange-glow">2</div>
-        <div class="w-24 h-24 rounded-2xl overflow-hidden mx-auto mb-4 bg-orange-50 flex items-center justify-center">
-          <img src="/images/how-to-2.jpg" alt="2-qadam: bosish" class="w-full h-full object-cover"
-            onerror="this.outerHTML='<i class=&quot;fa-solid fa-hand-pointer text-primary text-3xl&quot;></i>'" />
-        </div>
-        <h3 class="font-bold text-xl mb-2">Bosing</h3>
-        <p class="text-gray-500 text-sm leading-relaxed max-w-xs mx-auto">Tugmani bosib ushlab turing. Ko'pik va gaz shinaga kiradi.</p>
-      </div>
-      <div class="relative text-center">
-        <div class="w-16 h-16 badge rounded-full flex items-center justify-center mx-auto mb-5 text-white text-2xl font-black shadow-lg orange-glow">3</div>
-        <div class="w-24 h-24 rounded-2xl overflow-hidden mx-auto mb-4 bg-orange-50 flex items-center justify-center">
-          <img src="/images/how-to-3.jpg" alt="3-qadam: yurish" class="w-full h-full object-cover"
-            onerror="this.outerHTML='<i class=&quot;fa-solid fa-road text-primary text-3xl&quot;></i>'" />
-        </div>
-        <h3 class="font-bold text-xl mb-2">Yuring!</h3>
-        <p class="text-gray-500 text-sm leading-relaxed max-w-xs mx-auto">Shina muhrlangan va damlangan. Yo'lingizni xavfsiz davom ettiring!</p>
-      </div>
+      <h3>Ulab oling</h3>
+      <p>Ballonchadagi nayni shina valf (nippe)ga ulang</p>
     </div>
-    <div class="mt-12 bg-amber-50 border border-amber-200 rounded-2xl p-5 flex gap-4 items-start max-w-2xl mx-auto">
-      <i class="fa-solid fa-circle-info text-amber-500 text-xl mt-0.5 flex-shrink-0"></i>
-      <p class="text-amber-800 text-sm leading-relaxed">
-        <strong>Eslatma:</strong> Deargon vaqtinchalik yechim hisoblanadi. Imkon topilishi bilan shina
-        ustaxonasida teshikni to'liq ta'mirlatish tavsiya qilinadi.
-      </p>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-img">
+        <img src="/images/how-to-2.jpg" alt="Bosish"
+          onerror="this.outerHTML='<i class=&quot;fa-solid fa-hand-pointer&quot;></i>'" />
+      </div>
+      <h3>Bosing</h3>
+      <p>Tugmani bosib ushlab turing. Ko'pik va gaz shinaga kiradi</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div class="step-img">
+        <img src="/images/how-to-3.jpg" alt="Yurish"
+          onerror="this.outerHTML='<i class=&quot;fa-solid fa-road&quot;></i>'" />
+      </div>
+      <h3>Yuring!</h3>
+      <p>Shina muhrlangan va damlangan. Xavfsiz davom eting!</p>
     </div>
   </div>
-</section>
+  <div class="warn-banner mt-8">
+    <i class="fa-solid fa-circle-info"></i>
+    <p><strong>Eslatma:</strong> Deargon vaqtinchalik yechim. Imkon topilishi bilan shina ustaxonasida to'liq ta'mirlatish tavsiya qilinadi.</p>
+  </div>
+</div>
 
 <!-- ════════════ GALLERY ════════════ -->
-<section class="py-20 bg-gray-900" id="gallery">
-  <div class="max-w-6xl mx-auto px-4">
-    <h2 class="text-3xl md:text-4xl font-black text-center text-white mb-3">
-      Mahsulot <span class="text-primary">ko'rinishi</span>
-    </h2>
-    <p class="text-gray-400 text-center mb-12">Haqiqiy foydalanish jarayonidan rasmlar</p>
-    <div class="grid md:grid-cols-3 gap-5" id="gallery-grid">
-      <!-- JS tomonidan to'ldiriladi -->
-    </div>
+<div class="section">
+  <div class="section-head">
+    <h2>Mahsulot <em>ko'rinishi</em></h2>
+    <p>Haqiqiy foydalanish jarayonidan rasmlar</p>
   </div>
-</section>
-
-<!-- ════════════ VIDEO ════════════ -->
-<section class="py-20 bg-white" id="video">
-  <div class="max-w-4xl mx-auto px-4 text-center">
-    <h2 class="text-3xl md:text-4xl font-black text-gray-900 section-title mb-4">
-      Ko'rgazmali <span class="text-primary">video</span>
-    </h2>
-    <p class="text-gray-400 mb-10">Deargon qanday ishlashini o'z ko'zingiz bilan ko'ring</p>
-    <div id="video-container" class="relative rounded-2xl overflow-hidden shadow-2xl aspect-video bg-gray-100 flex items-center justify-center">
-      <div class="text-gray-400 flex flex-col items-center gap-3">
-        <i class="fa-brands fa-youtube text-6xl text-red-400"></i>
-        <p class="text-sm">Video yuklanmoqda...</p>
-      </div>
-    </div>
-  </div>
-</section>
+  <div class="gallery-grid" id="gallery-grid"></div>
+</div>
 
 <!-- ════════════ REVIEWS ════════════ -->
-<section class="py-20 bg-gray-50" id="reviews">
-  <div class="max-w-5xl mx-auto px-4">
-    <h2 class="text-3xl md:text-4xl font-black text-center section-title mb-14">
-      Mijozlar <span class="text-primary">fikri</span>
-    </h2>
-    <div class="grid md:grid-cols-3 gap-6">
-      <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 card-hover">
-        <div class="flex mb-3"><i class="fa-solid fa-star star"></i><i class="fa-solid fa-star star"></i><i class="fa-solid fa-star star"></i><i class="fa-solid fa-star star"></i><i class="fa-solid fa-star star"></i></div>
-        <p class="text-gray-600 text-sm leading-relaxed mb-5">"Toshkentdan Samarqandga ketayotib yo'l o'rtasida shina teshildi. Deargon 3 daqiqada hal qildi. Hech qanday muammo bo'lmadi. Endi har doim bagajimda!"</p>
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 badge rounded-full flex items-center justify-center text-white font-bold text-sm">JA</div>
-          <div><div class="font-semibold text-sm">Jasur Abdullayev</div><div class="text-gray-400 text-xs">Toshkent</div></div>
+<div class="section">
+  <div class="section-head">
+    <h2>Mijozlar <em>fikri</em></h2>
+    <p>1000+ mamnun xaridor</p>
+  </div>
+  <div class="reviews-grid">
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Toshkentdan Samarqandga ketayotib yo'l o'rtasida shina teshildi. Deargon 3 daqiqada hal qildi. Endi har doim bagajimda!"</p>
+      <div class="review-author">
+        <div class="review-avatar">JA</div>
+        <div>
+          <div class="review-name">Jasur Abdullayev</div>
+          <div class="review-city">Toshkent</div>
+          <div class="review-verified"><i class="fa-solid fa-circle-check"></i> Tasdiqlangan xaridor</div>
         </div>
       </div>
-      <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 card-hover">
-        <div class="flex mb-3"><i class="fa-solid fa-star star"></i><i class="fa-solid fa-star star"></i><i class="fa-solid fa-star star"></i><i class="fa-solid fa-star star"></i><i class="fa-solid fa-star star"></i></div>
-        <p class="text-gray-600 text-sm leading-relaxed mb-5">"Qishda kechqurun shina teshildi. Qarangki, bagajimda Deargon bor edi. Qorong'ida g'ildirak almashtirmasdan uyga yetib keldim. Zo'r mahsulot!"</p>
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 badge rounded-full flex items-center justify-center text-white font-bold text-sm">BM</div>
-          <div><div class="font-semibold text-sm">Bobur Mirzayev</div><div class="text-gray-400 text-xs">Samarqand</div></div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Qishda kechqurun shina teshildi. Bagajimda Deargon bor edi. Qorong'ida g'ildirak almashtirmasdan uyga yetib keldim!"</p>
+      <div class="review-author">
+        <div class="review-avatar">BM</div>
+        <div>
+          <div class="review-name">Bobur Mirzayev</div>
+          <div class="review-city">Samarqand</div>
+          <div class="review-verified"><i class="fa-solid fa-circle-check"></i> Tasdiqlangan xaridor</div>
         </div>
       </div>
-      <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 card-hover">
-        <div class="flex mb-3"><i class="fa-solid fa-star star"></i><i class="fa-solid fa-star star"></i><i class="fa-solid fa-star star"></i><i class="fa-solid fa-star star"></i><i class="fa-solid fa-star star"></i></div>
-        <p class="text-gray-600 text-sm leading-relaxed mb-5">"Xotinimning mashinasida ham, o'zimnikida ham bor. Bir marta sinab ko'rgandan keyin boshqa yechimni o'ylamayman. Ishlatish juda oson!"</p>
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 badge rounded-full flex items-center justify-center text-white font-bold text-sm">UQ</div>
-          <div><div class="font-semibold text-sm">Ulug'bek Qodirov</div><div class="text-gray-400 text-xs">Namangan</div></div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Xotinimning mashinasida ham, o'zimnikida ham bor. Bir marta sinab ko'rgandan keyin boshqa yechimni o'ylamayman!"</p>
+      <div class="review-author">
+        <div class="review-avatar">UQ</div>
+        <div>
+          <div class="review-name">Ulug'bek Qodirov</div>
+          <div class="review-city">Namangan</div>
+          <div class="review-verified"><i class="fa-solid fa-circle-check"></i> Tasdiqlangan xaridor</div>
         </div>
       </div>
     </div>
   </div>
-</section>
+</div>
+
+<!-- ════════════ COMPARISON ════════════ -->
+<div class="section">
+  <div class="section-head">
+    <h2>Deargon <em>vs</em> an'anaviy usul</h2>
+    <p>Nima uchun Deargon yaxshiroq?</p>
+  </div>
+  <div class="compare-grid">
+    <div class="compare-card highlight">
+      <div class="compare-head">
+        <span class="compare-badge">✓ Deargon</span>
+        <h3>Aerosol bilan</h3>
+      </div>
+      <div class="compare-row"><span class="ic ic-yes">✅</span><span>3–5 daqiqada tayyor</span></div>
+      <div class="compare-row"><span class="ic ic-yes">✅</span><span>G'ildirak ko'tarishsiz</span></div>
+      <div class="compare-row"><span class="ic ic-yes">✅</span><span>Kechasi ham qulay</span></div>
+      <div class="compare-row"><span class="ic ic-yes">✅</span><span>Qo'l ifloslanmaydi</span></div>
+      <div class="compare-row"><span class="ic ic-yes">✅</span><span>Bagajda kichkina joy</span></div>
+      <div class="compare-row"><span class="ic ic-yes">✅</span><span>Jismoniy kuch talab etmaydi</span></div>
+    </div>
+    <div class="compare-card">
+      <div class="compare-head">
+        <span class="compare-badge gray">G'ildirak almashtirish</span>
+        <h3>An'anaviy usul</h3>
+      </div>
+      <div class="compare-row"><span class="ic ic-no">❌</span><span>20–40 daqiqa ketadi</span></div>
+      <div class="compare-row"><span class="ic ic-no">❌</span><span>Domkrat, gaech kerak</span></div>
+      <div class="compare-row"><span class="ic ic-no">❌</span><span>Kechasi xavfli</span></div>
+      <div class="compare-row"><span class="ic ic-no">❌</span><span>Qo'l va kiyim iflosllanadi</span></div>
+      <div class="compare-row"><span class="ic ic-no">❌</span><span>Zapas g'ildirak kerak</span></div>
+      <div class="compare-row"><span class="ic ic-no">❌</span><span>Og'ir jismoniy ish</span></div>
+    </div>
+  </div>
+</div>
 
 <!-- ════════════ FAQ ════════════ -->
-<section class="py-20 bg-white" id="faq">
-  <div class="max-w-3xl mx-auto px-4">
-    <h2 class="text-3xl md:text-4xl font-black text-center section-title mb-12">
-      Ko'p so'raladigan <span class="text-primary">savollar</span>
-    </h2>
-    <div class="space-y-3" id="faq-list"></div>
+<div class="section">
+  <div class="section-head">
+    <h2>Ko'p so'raladigan <em>savollar</em></h2>
   </div>
-</section>
+  <div class="faq-list" id="faq-list"></div>
+</div>
 
 <!-- ════════════ CONTACT ════════════ -->
-<section class="py-20 hero-bg" id="contact">
-  <div class="max-w-3xl mx-auto px-4 text-center text-white">
-    <span class="inline-block bg-white/10 text-primary text-sm font-bold px-4 py-1.5 rounded-full mb-5 uppercase tracking-widest border border-primary/30">
-      Aloqa
-    </span>
-    <h2 id="contact-title" class="text-3xl md:text-4xl font-black mb-4">
-      Buyurtma yoki savol <span class="text-primary">bormi?</span>
-    </h2>
-    <p id="contact-subtitle" class="text-gray-400 mb-10 text-lg">
-      Telegram orqali yozing yoki qo'ng'iroq qiling — tez javob beramiz.
-    </p>
-
-    <a id="phone-link" href="tel:+998948379944"
-       class="inline-flex items-center gap-3 bg-white/10 border border-white/20 text-white text-2xl md:text-3xl font-black px-8 py-5 rounded-2xl hover:bg-white/20 transition mb-8 mx-auto">
-      <i class="fa-solid fa-phone text-primary"></i>
+<div class="section" id="contact">
+  <div class="contact-block">
+    <h2 id="contact-title-el">Buyurtma yoki savol <em>bormi?</em></h2>
+    <p id="contact-subtitle-el">Telegram orqali yozing yoki qo'ng'iroq qiling — tez javob beramiz.</p>
+    <a id="phone-link" href="tel:+998948379944" class="contact-phone">
+      <i class="fa-solid fa-phone"></i>
       <span id="phone-display">+998 94 837 99 44</span>
     </a>
-
-    <div class="flex flex-wrap justify-center gap-4">
-      <a id="telegram-main-link" href="https://t.me/deargonAdmin" target="_blank" rel="noopener"
-         class="flex items-center gap-2 bg-sky-500 hover:bg-sky-600 text-white font-bold px-8 py-4 rounded-full transition text-lg">
-        <i class="fa-brands fa-telegram text-2xl"></i> Telegram
+    <div class="contact-socials">
+      <a id="tg-contact-link" href="https://t.me/deargonAdmin" target="_blank" rel="noopener" class="btn-social tg">
+        <i class="fa-brands fa-telegram"></i> Telegram
       </a>
-      <a id="whatsapp-link" href="https://wa.me/998948379944" target="_blank" rel="noopener"
-         class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold px-8 py-4 rounded-full transition text-lg">
-        <i class="fa-brands fa-whatsapp text-2xl"></i> WhatsApp
+      <a id="wa-contact-link" href="https://wa.me/998948379944" target="_blank" rel="noopener" class="btn-social wa">
+        <i class="fa-brands fa-whatsapp"></i> WhatsApp
       </a>
-      <a id="instagram-link" href="#" target="_blank" rel="noopener"
-         class="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90 text-white font-bold px-8 py-4 rounded-full transition text-lg hidden">
-        <i class="fa-brands fa-instagram text-2xl"></i> Instagram
+      <a id="ig-contact-link" href="#" target="_blank" rel="noopener" class="btn-social ig" style="display:none;">
+        <i class="fa-brands fa-instagram"></i> Instagram
       </a>
     </div>
-
-    <div class="mt-12 grid sm:grid-cols-3 gap-6 text-center">
-      <div class="bg-white/5 border border-white/10 rounded-2xl p-5">
-        <i class="fa-solid fa-truck-fast text-primary text-2xl mb-2"></i>
-        <div id="delivery-text" class="font-semibold text-sm">O'zbekiston bo'yicha yetkazib berish</div>
+    <div class="contact-info-grid">
+      <div class="contact-info-card">
+        <i class="fa-solid fa-truck-fast"></i>
+        <span id="delivery-text-el">O'zbekiston bo'yicha yetkazib berish</span>
       </div>
-      <div class="bg-white/5 border border-white/10 rounded-2xl p-5">
-        <i class="fa-solid fa-clock text-primary text-2xl mb-2"></i>
-        <div class="font-semibold text-sm">Kuniga 9:00 – 21:00 ishlaydi</div>
+      <div class="contact-info-card">
+        <i class="fa-solid fa-clock"></i>
+        Kuniga 9:00 – 21:00 ishlaydi
       </div>
-      <div class="bg-white/5 border border-white/10 rounded-2xl p-5">
-        <i class="fa-solid fa-shield-halved text-primary text-2xl mb-2"></i>
-        <div class="font-semibold text-sm">Sifat kafolati beriladi</div>
+      <div class="contact-info-card">
+        <i class="fa-solid fa-shield-halved"></i>
+        Sifat kafolati beriladi
       </div>
     </div>
   </div>
-</section>
+</div>
 
 <!-- ════════════ FOOTER ════════════ -->
-<footer class="bg-gray-950 text-gray-400 py-8">
-  <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-    <span class="text-xl font-black text-white">DEAR<span class="text-primary">GON</span></span>
-    <p id="footer-copy" class="text-sm">© 2024 Deargon. Barcha huquqlar himoyalangan.</p>
-    <div class="flex gap-4">
-      <a id="footer-tg" href="https://t.me/deargonAdmin" target="_blank" class="hover:text-primary transition">
-        <i class="fa-brands fa-telegram text-xl"></i>
-      </a>
-      <a id="footer-wa" href="https://wa.me/998948379944" target="_blank" class="hover:text-primary transition">
-        <i class="fa-brands fa-whatsapp text-xl"></i>
-      </a>
-      <a id="footer-ig" href="#" target="_blank" class="hover:text-primary transition hidden">
-        <i class="fa-brands fa-instagram text-xl"></i>
-      </a>
-    </div>
-  </div>
+<footer>
+  <p><span>DEARGON</span> · <span id="footer-copy-el">© 2024 Deargon. Barcha huquqlar himoyalangan.</span></p>
 </footer>
 
-<!-- Floating Telegram button -->
-<a id="float-telegram" href="https://t.me/deargonAdmin" target="_blank" rel="noopener"
-   class="fixed bottom-6 right-6 z-50 w-14 h-14 bg-sky-500 hover:bg-sky-600 rounded-full flex items-center justify-center shadow-lg tg-pulse transition">
-  <i class="fa-brands fa-telegram text-white text-2xl"></i>
-</a>
+<!-- ════════════ STICKY CTA ════════════ -->
+<div class="sticky-cta">
+  <a id="uzum-sticky-link" href="https://uzum.uz" target="_blank" rel="noopener" class="btn-uzum">
+    <i class="fa-solid fa-bag-shopping"></i>
+    Uzum Marketda sotib olish
+    <i class="fa-solid fa-arrow-right"></i>
+  </a>
+</div>
 
 <!-- ════════════ SCRIPTS ════════════ -->
 <script>
+/* ── FAQ ── */
 const faqs = [
   { q: "Deargon qaysi turdagi shinalar uchun mos?",
-    a: "Yengil avtomobillar (sedan, hatchback, crossover va boshqalar) uchun mo'ljallangan. Og'ir yuk mashinalari yoki mototsikl shinalariga tavsiya etilmaydi." },
+    a: "Yengil avtomobillar (sedan, hatchback, crossover) uchun mo'ljallangan. Og'ir yuk mashinalari yoki mototsikl shinalariga tavsiya etilmaydi." },
   { q: "Qancha muddatga muhrlaydi?",
-    a: "Deargon vaqtinchalik muhrlaydi — imkon topilishi bilan shina ustaxonasiga borib to'liq ta'mirlashing tavsiya qilinadi. Odatda yaqin masofani bosib o'tish uchun yetarli." },
+    a: "Deargon vaqtinchalik muhrlaydi — imkon topilishi bilan shina ustaxonasiga borib to'liq ta'mirlashing tavsiya qilinadi." },
   { q: "Bir qutida qancha shina damlash mumkin?",
-    a: "Har bir quti bitta shina uchun mo'ljallangan. Shuning uchun ehtiyot sifatida 2 ta quti saqlash tavsiya etiladi." },
+    a: "Har bir quti bitta shina uchun mo'ljallangan. Ehtiyot sifatida 2 ta quti saqlash tavsiya etiladi." },
   { q: "Ishlash xavfsizmi?",
-    a: "Ha, mutlaqo xavfsiz. Ko'pik va gaz faqat shina ichida ishlaydi, siz bilan to'g'ridan-to'g'ri aloqa bo'lmaydi. Ammo olov yaqinida ishlatmang va ko'zni himoya qiling." },
+    a: "Ha. Ko'pik va gaz faqat shina ichida ishlaydi. Olov yaqinida ishlatmang va ko'zni himoya qiling." },
   { q: "Qayerda sotib olsa bo'ladi?",
-    a: "Mahsulotni ikki yo'l bilan olishingiz mumkin: <strong>1)</strong> Telefon yoki Telegram orqali to'g'ridan-to'g'ri bizdan buyurtma bering — O'zbekiston bo'yicha yetkazib beramiz. <strong>2)</strong> <a href='https://uzum.uz' target='_blank' rel='noopener' class='text-primary underline'>Uzum Market</a> orqali onlayn sotib oling." },
+    a: "1) <a href='https://uzum.uz' target='_blank'>Uzum Market</a> orqali onlayn. 2) Telegram yoki telefon orqali to'g'ridan-to'g'ri bizdan buyurtma bering — O'zbekiston bo'yicha yetkazib beramiz." },
+  { q: "Yetkazib berish qancha turadi?",
+    a: "Toshkent ichida bepul yetkazib berish. Viloyatlarga Uzum Express orqali yetkaziladi." },
 ];
 
 const faqList = document.getElementById('faq-list');
 faqs.forEach((item, i) => {
-  faqList.insertAdjacentHTML('beforeend', `
-    <div class="border border-gray-100 rounded-2xl overflow-hidden bg-white shadow-sm">
-      <button onclick="toggleFaq(${i})" class="w-full flex items-center justify-between px-6 py-4 text-left font-semibold text-gray-800 hover:text-primary transition">
-        <span>${item.q}</span>
-        <i id="faq-icon-${i}" class="fa-solid fa-plus text-primary faq-icon flex-shrink-0 ml-3"></i>
-      </button>
-      <div id="faq-content-${i}" class="faq-content px-6">
-        <p class="text-gray-500 text-sm leading-relaxed pb-4">${item.a}</p>
-      </div>
-    </div>`);
+  const div = document.createElement('div');
+  div.className = 'faq-item';
+  div.innerHTML = `
+    <button class="faq-q" onclick="toggleFaq(${i})">
+      <span>${item.q}</span>
+      <i id="fi-${i}" class="fa-solid fa-plus faq-icon"></i>
+    </button>
+    <div class="faq-a" id="fa-${i}">
+      <div class="faq-a-inner">${item.a}</div>
+    </div>`;
+  faqList.appendChild(div);
 });
 
 function toggleFaq(i) {
-  const content = document.getElementById(`faq-content-${i}`);
-  const icon    = document.getElementById(`faq-icon-${i}`);
-  const isOpen  = content.classList.contains('open');
-  document.querySelectorAll('.faq-content').forEach(el => el.classList.remove('open'));
+  const a    = document.getElementById(`fa-${i}`);
+  const icon = document.getElementById(`fi-${i}`);
+  const open = a.classList.contains('open');
+  document.querySelectorAll('.faq-a').forEach(el => el.classList.remove('open'));
   document.querySelectorAll('.faq-icon').forEach(el => el.classList.remove('open'));
-  if (!isOpen) { content.classList.add('open'); icon.classList.add('open'); }
+  if (!open) { a.classList.add('open'); icon.classList.add('open'); }
 }
 
+/* ── Countdown ── */
+let _countdownInterval = null;
+function startCountdown(endDateStr) {
+  if (_countdownInterval) clearInterval(_countdownInterval);
+  // endDateStr: "2026-04-10T23:59:59" yoki bo'sh
+  const endTime = endDateStr ? new Date(endDateStr).getTime() : null;
+  const cdWrap  = document.getElementById('cd-wrap');
+
+  if (!endTime || isNaN(endTime)) {
+    if (cdWrap) cdWrap.style.display = 'none';
+    return;
+  }
+  if (cdWrap) cdWrap.style.display = '';
+
+  function tick() {
+    const diff = Math.max(0, endTime - Date.now());
+    const totalH = Math.floor(diff / 3600000);
+    const d = Math.floor(totalH / 24);
+    const h = totalH % 24;
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+
+    const dEl    = document.getElementById('cd-d');
+    const hEl    = document.getElementById('cd-h');
+    const hLbl   = document.getElementById('cd-h-lbl');
+
+    if (d > 0) {
+      if (dEl) { dEl.textContent = String(d).padStart(2,'0'); dEl.style.display = 'block'; }
+      if (hLbl) hLbl.textContent = 'soat';
+    } else {
+      if (dEl) dEl.style.display = 'none';
+    }
+    if (hEl) hEl.textContent = String(h).padStart(2,'0');
+    document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
+    document.getElementById('cd-s').textContent = String(s).padStart(2,'0');
+  }
+  tick();
+  _countdownInterval = setInterval(tick, 1000);
+}
+
+/* ── Video Modal ── */
+let _youtubeId = null;
+
+function openVideoModal() {
+  const modal   = document.getElementById('video-modal');
+  const box     = document.getElementById('modal-box');
+  const noVideo = document.getElementById('modal-no-video');
+
+  // Eski iframe ni tozalaymiz
+  const old = box.querySelector('iframe');
+  if (old) old.remove();
+
+  if (_youtubeId) {
+    noVideo.style.display = 'none';
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube.com/embed/${_youtubeId}?autoplay=1`;
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    iframe.allowFullscreen = true;
+    box.appendChild(iframe);
+  } else {
+    noVideo.style.display = 'flex';
+  }
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeVideoModal(e) {
+  if (e && e.target !== document.getElementById('video-modal') && !e.target.closest('.modal-close')) return;
+  const modal = document.getElementById('video-modal');
+  modal.classList.remove('active');
+  document.body.style.overflow = '';
+  // Autoplay ni to'xtatish uchun iframe src ni tozalaymiz
+  setTimeout(() => {
+    const iframe = document.getElementById('modal-box').querySelector('iframe');
+    if (iframe) iframe.remove();
+  }, 250);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeVideoModal({ target: document.getElementById('video-modal') });
+});
+
+/* ── Gallery ── */
+function renderGallery(items) {
+  const grid = document.getElementById('gallery-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  items.forEach(({ url, label, icon }) => {
+    const div = document.createElement('div');
+    div.className = 'gallery-item';
+    if (url && url.trim()) {
+      div.innerHTML = `
+        <img src="${url}" alt="${label}"
+          onerror="this.remove(); this.parentElement.innerHTML='<i class=\\'fa-solid ${icon} gallery-icon\\'></i>';" />
+        <div class="gallery-item-overlay"><span>${label}</span></div>`;
+    } else {
+      div.innerHTML = `<i class="fa-solid ${icon} gallery-icon"></i>`;
+    }
+    grid.appendChild(div);
+  });
+}
+
+/* ── YouTube ── */
 function getYoutubeId(url) {
   if (!url) return null;
   const pts = [/youtu\.be\/([^?&#]+)/, /youtube\.com\/watch\?v=([^&#]+)/, /youtube\.com\/embed\/([^?&#]+)/, /youtube\.com\/shorts\/([^?&#]+)/];
@@ -448,92 +1163,92 @@ function getYoutubeId(url) {
   return null;
 }
 
+/* ── Helpers ── */
 function setText(id, val) { const el = document.getElementById(id); if (el && val) el.textContent = val; }
+function setHtml(id, val) { const el = document.getElementById(id); if (el && val) el.innerHTML = val; }
 function setHref(id, val) { const el = document.getElementById(id); if (el && val) el.href = val; }
-function show(id)         { const el = document.getElementById(id); if (el) el.classList.remove('hidden'); }
+function show(id) { const el = document.getElementById(id); if (el) el.style.display = ''; }
 
-function renderGallery(items) {
-  const grid = document.getElementById('gallery-grid');
-  if (!grid) return;
-  grid.innerHTML = '';
-  items.forEach(({ url, label, icon }) => {
-    const div = document.createElement('div');
-    div.className = 'group relative rounded-2xl overflow-hidden aspect-[4/3] bg-gray-800 shadow-xl flex items-center justify-center';
-
-    if (url && url.trim()) {
-      // Rasm bor — ko'rsatamiz, yuklanmasa icon ga fallback
-      div.innerHTML = `
-        <img src="${url}" alt="${label}"
-          class="w-full h-full object-cover transition duration-500 group-hover:scale-105"
-          onerror="this.remove(); this.parentElement.innerHTML += '<i class=&quot;fa-solid ${icon} text-4xl text-gray-600&quot;></i>';" />
-        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
-          <span class="text-white text-sm font-semibold">${label}</span>
-        </div>`;
-    } else {
-      // URL yo'q — icon ko'rsatamiz
-      div.innerHTML = `<i class="fa-solid ${icon} text-4xl text-gray-600"></i>`;
-    }
-
-    grid.appendChild(div);
-  });
-}
-
+/* ── Load Settings ── */
 async function loadSettings() {
   try {
     const res = await fetch('/api/settings');
     const d   = await res.json();
 
-    if (d.site_title)    document.getElementById('page-title').textContent = d.site_title;
-    if (d.hero_title)    setText('hero-title',    d.hero_title);
-    if (d.hero_highlight)setText('hero-highlight', d.hero_highlight);
-    if (d.hero_subtitle && d.hero_subtitle.trim()) {
-      const el = document.getElementById('hero-subtitle');
-      if (el) el.innerHTML = '<strong class="text-white">Deargon</strong> ' + d.hero_subtitle;
-    }
+    if (d.site_title)     document.getElementById('page-title').textContent = d.site_title;
+    if (d.hero_title)     setText('hero-title-el',     d.hero_title);
+    if (d.hero_highlight) setText('hero-highlight-el', d.hero_highlight);
+    if (d.hero_subtitle && d.hero_subtitle.trim()) setText('hero-subtitle-el', d.hero_subtitle);
     if (d.price)          setText('price-display',          d.price);
     if (d.price_currency) setText('price-currency-display', d.price_currency);
-    if (d.phone) { setText('phone-display', d.phone); setHref('phone-link', `tel:${d.phone}`); }
+    // Eski narx
+    if (d.price_old) {
+      const el = document.getElementById('price-old-display');
+      if (el) el.textContent = d.price_old + ' ' + (d.price_currency || "so'm");
+    }
+    // Chegirma
+    if (d.price_discount) {
+      const el = document.getElementById('price-discount-display');
+      if (el) el.textContent = '-' + d.price_discount + '%';
+    }
+    // Countdown
+    startCountdown(d.countdown_end || '');
 
-    const tgMain = d.telegram_main || d.telegram;
-    if (tgMain) ['telegram-main-link', 'footer-tg', 'float-telegram'].forEach(id => setHref(id, tgMain));
+    // Uzum link
+    const uzumUrl = d.uzum_url || 'https://uzum.uz';
+    ['uzum-hero-link', 'uzum-sticky-link'].forEach(id => setHref(id, uzumUrl));
 
+    if (d.contact_title)   setHtml('contact-title-el',   d.contact_title);
+    if (d.contact_subtitle)setText('contact-subtitle-el', d.contact_subtitle);
+    if (d.delivery_text)   setText('delivery-text-el',    d.delivery_text);
+    if (d.footer_copy)     setText('footer-copy-el',      d.footer_copy);
+
+    // Phone
+    if (d.phone) {
+      setText('phone-display', d.phone);
+      setHref('phone-link', `tel:${d.phone}`);
+    }
+
+    // Telegram
+    const tg = d.telegram_main || d.telegram;
+    if (tg) {
+      ['tg-hero-link', 'tg-contact-link'].forEach(id => setHref(id, tg));
+    }
+
+    // WhatsApp
     const wa = d.whatsapp || (d.phone || '').replace(/\D/g, '');
-    if (wa) ['whatsapp-link', 'footer-wa'].forEach(id => setHref(id, `https://wa.me/${wa}`));
+    if (wa) ['wa-contact-link'].forEach(id => setHref(id, `https://wa.me/${wa}`));
 
-    if (d.instagram) ['instagram-link', 'footer-ig'].forEach(id => { setHref(id, d.instagram); show(id); });
-    if (d.delivery_text)   setText('delivery-text',    d.delivery_text);
-    if (d.contact_title)   setText('contact-title',    d.contact_title);
-    if (d.contact_subtitle)setText('contact-subtitle', d.contact_subtitle);
-    if (d.footer_copy)     setText('footer-copy',      d.footer_copy);
+    // Instagram
+    if (d.instagram) {
+      setHref('ig-contact-link', d.instagram);
+      show('ig-contact-link');
+    }
 
-    const localImg = document.getElementById('product-local-img');
-    if (d.product_image_url && localImg) localImg.src = d.product_image_url;
+    // Product image
+    const pImg = document.getElementById('product-img');
+    if (d.product_image_url && pImg) pImg.src = d.product_image_url;
 
-    // Galereya
+    // YouTube — faqat ID ni saqlaymiz, modal ochilganda ishlatiladi
+    _youtubeId = getYoutubeId(d.youtube_url);
+
+    // Gallery
     renderGallery([
-      { url: d.gallery_image_1, label: 'Shina teshilgan vaziyat',   icon: 'fa-car-burst' },
-      { url: d.gallery_image_2, label: "Deargon qo'llanilmoqda",    icon: 'fa-spray-can-sparkles' },
+      { url: d.gallery_image_1, label: 'Shina teshilgan vaziyat',      icon: 'fa-car-burst' },
+      { url: d.gallery_image_2, label: "Deargon qo'llanilmoqda",       icon: 'fa-spray-can-sparkles' },
       { url: d.gallery_image_3, label: "Xavfsiz yo'l davom ettirildi", icon: 'fa-road' },
     ]);
 
-    const vid = document.getElementById('video-container');
-    const yid = getYoutubeId(d.youtube_url);
-    if (vid && yid) {
-      vid.innerHTML = `<iframe src="https://www.youtube.com/embed/${yid}" title="Deargon video"
-        frameborder="0" allowfullscreen class="w-full h-full absolute inset-0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
-      </iframe>`;
-      vid.style.position = 'relative';
-    }
   } catch (e) { console.error('Settings yuklashda xato:', e); }
 }
 
 loadSettings();
 
+// Smooth scroll
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', e => {
-    const target = document.querySelector(a.getAttribute('href'));
-    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
   });
 });
 </script>

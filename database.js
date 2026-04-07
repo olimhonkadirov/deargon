@@ -1,11 +1,8 @@
-//const { DatabaseSync } = require('node:sqlite');
 const Database = require('better-sqlite3');
-const db = new Database('deargon.db');
+const bcrypt   = require('bcryptjs');
+const path     = require('path');
 
-const bcrypt = require('bcryptjs');
-const path   = require('path');
-
-//const db = new DatabaseSync(path.join(__dirname, 'deargon.db'));
+const db = new Database(path.join(__dirname, 'deargon.db'));
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS settings (
@@ -25,6 +22,14 @@ const defaults = {
   // Narx
   price:             '59 000',
   price_currency:    "so'm",
+  price_old:         '99 000',
+  price_discount:    '40',
+
+  // Countdown (UTC ISO format: 2026-04-10T18:59:00.000Z)
+  countdown_end:     '',
+
+  // Uzum Market
+  uzum_url:          'https://uzum.uz',
 
   // Hero matni
   hero_title:        "Shina teshildimi?",
@@ -43,7 +48,7 @@ const defaults = {
   hero_image_url:    '',
   product_image_url: '',
 
-  // Galereya rasmlari
+  // Galereya
   gallery_image_1:   '',
   gallery_image_2:   '',
   gallery_image_3:   '',

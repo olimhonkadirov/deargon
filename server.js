@@ -82,7 +82,8 @@ app.get('/api/admin/check', (req, res) => {
 // ── Admin Settings ────────────────────────────────────────────────────────────
 const EDITABLE = [
   'phone', 'whatsapp', 'telegram', 'telegram_main', 'instagram',
-  'price', 'price_currency',
+  'price', 'price_currency', 'price_old', 'price_discount',
+  'countdown_end', 'uzum_url',
   'hero_title', 'hero_highlight', 'hero_subtitle',
   'site_title', 'delivery_text', 'contact_title', 'contact_subtitle', 'footer_copy',
   'youtube_url', 'hero_image_url', 'product_image_url',

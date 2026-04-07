@@ -4,7 +4,7 @@
   "description": "Deargon tire sealant landing page",
   "main": "server.js",
   "scripts": {
-    "start": "node --experimental-sqlite --no-warnings server.js",
+    "start": "node --no-warnings server.js",
     "dev": "node --no-warnings --watch server.js"
   },
   "dependencies": {
